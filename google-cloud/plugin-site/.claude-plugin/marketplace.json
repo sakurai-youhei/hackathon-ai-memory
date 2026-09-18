@@ -1,0 +1,22 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "hackathon-ai-memory",
+  "description": "Plugin marketplace for AI\u30e1\u30e2\u30ea\u30fc\u3044\u3089\u3093\u304b\u3048\uff5e",
+  "owner": {
+    "name": "sakurai-youhei"
+  },
+  "plugins": [
+    {
+      "name": "ai-memory",
+      "displayName": "AI\u30e1\u30e2\u30ea\u30fc\u3044\u3089\u3093\u304b\u3048\uff5e",
+      "description": "Remember and recall shared hackathon knowledge via Kibana Agent Builder MCP.",
+      "version": "0.1.0",
+      "author": {
+        "name": "sakurai-youhei"
+      },
+      "source": "./plugins/ai-memory",
+      "category": "productivity",
+      "homepage": "https://github.com/sakurai-youhei/hackathon-ai-memory"
+    }
+  ]
+}

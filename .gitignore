@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Rendered plugin MCP config (Kibana URL baked from KB_ENDPOINT)
+google-cloud/plugin-site/plugins/ai-memory/.mcp.json
