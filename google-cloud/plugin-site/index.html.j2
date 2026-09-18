@@ -3,53 +3,70 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AIメモリーいらんかえ～ Plugin Marketplace</title>
+  <title>AIメモリーいらんかえ～ セットアップガイド</title>
 </head>
 <body>
   <h1>AIメモリーいらんかえ～</h1>
-  <p>Agent plugin marketplace</p>
-  <p><code>{{ plugin_public_url }}</code></p>
+  <p>エージェントプラグインの簡単セットアップガイドです。</p>
+  <p>配布サイト: <code>{{ plugin_public_url }}</code></p>
 
-  <h2>Claude Code</h2>
+  <h2>1. プラグインを入れる</h2>
+
+  <h3>Claude Code</h3>
   <pre>/plugin marketplace add {{ plugin_public_url }}/marketplace.json
 /plugin install ai-memory@hackathon-ai-memory</pre>
-  <p>Then set <code>AI_MEMORY_API_KEY</code>.</p>
 
-  <h2>Cursor</h2>
-  <p>Download and install the plugin zip locally:</p>
+  <h3>Cursor</h3>
+  <p>Cursor のチーム向けマーケットプレースは現状 Git リポジトリ前提のため、この配布サイトの zip を手元に入れて使います。</p>
   <pre>curl -fsSL "{{ plugin_public_url }}/plugins/ai-memory.zip" -o ai-memory.zip
 mkdir -p ~/.cursor/plugins/local
-unzip -o ai-memory.zip -d ~/.cursor/plugins/local
-# Restart Cursor / Reload Window, then set AI_MEMORY_API_KEY</pre>
-  <p>Marketplace manifest (for Team Marketplace / local clone):
+unzip -o ai-memory.zip -d ~/.cursor/plugins/local</pre>
+  <p>その後、Cursor をリロード（メニューの Developer: Reload Window）してください。</p>
+  <p>マーケットプレース定義ファイル（チーム向けマーケットプレースやローカル clone 用）:
     <a href="{{ plugin_public_url }}/.cursor-plugin/marketplace.json"><code>.cursor-plugin/marketplace.json</code></a>
   </p>
 
-  <h2>Gemini CLI</h2>
+  <h3>Gemini CLI</h3>
   <pre>curl -fsSL "{{ plugin_public_url }}/plugins/ai-memory.zip" -o ai-memory.zip
 unzip -o ai-memory.zip -d /tmp
 gemini extensions install /tmp/ai-memory</pre>
-  <p>On install, set the <strong>AI Memory API key</strong> (<code>AI_MEMORY_API_KEY</code>).</p>
 
-  <h2>Recommended skill</h2>
+  <h2>2. API キーを設定する</h2>
+  <p>発行された API キーを環境変数・設定項目 <code>AI_MEMORY_API_KEY</code> として設定します。</p>
+  <ul>
+    <li>Claude Code: プラグインのユーザー設定</li>
+    <li>Cursor: プラグイン設定（variables）</li>
+    <li>Gemini CLI: 拡張機能の設定（インストール時の入力）</li>
+  </ul>
+
+  <h2>3. 推奨スキル（elasticsearch-esql）</h2>
   <p>
-    Also install <strong>elasticsearch-esql</strong> from
-    <a href="https://github.com/elastic/agent-skills">elastic/agent-skills</a>.
-    It is recommended for ES|QL search and aggregation alongside this plugin.
+    このプラグインを使うときは、
+    <a href="https://github.com/elastic/agent-skills">elastic/agent-skills</a>
+    の <strong>elasticsearch-esql</strong> スキルも入れておくことを推奨します。
+    ES|QL での検索や集計がしやすくなります。
   </p>
   <pre>npx skills add elastic/agent-skills --skill elasticsearch-esql</pre>
-  <p>Claude Code (marketplace + Elasticsearch plugin, includes elasticsearch-esql):</p>
+  <p>Claude Code では、次のようにマーケットプレースを追加してから Elasticsearch 用プラグインを入れる方法でも構いません（<code>elasticsearch-esql</code> を含みます）:</p>
   <pre>claude plugin marketplace add https://github.com/elastic/agent-skills
 claude plugin install elastic-elasticsearch@elastic-agent-skills</pre>
 
-  <h2>Artifacts</h2>
+  <h2>4. 使ってみる</h2>
+  <p>エージェントに、ふつうの日本語で話しかけてください。</p>
   <ul>
-    <li><a href="{{ plugin_public_url }}/marketplace.json">Claude marketplace.json</a></li>
-    <li><a href="{{ plugin_public_url }}/.claude-plugin/marketplace.json">.claude-plugin/marketplace.json</a></li>
-    <li><a href="{{ plugin_public_url }}/.cursor-plugin/marketplace.json">.cursor-plugin/marketplace.json</a></li>
-    <li><a href="{{ plugin_public_url }}/plugins/ai-memory.zip">plugins/ai-memory.zip</a></li>
+    <li>「〇〇を覚えて」→ 記憶として保存します</li>
+    <li>「〇〇って何だっけ？」→ 記憶を検索して答えます</li>
   </ul>
 
-  <p><strong>Caution:</strong> Hackathon-grade security only. Do not store personal or confidential data.</p>
+  <h2>配布ファイル</h2>
+  <ul>
+    <li><a href="{{ plugin_public_url }}/marketplace.json">Claude 用 marketplace.json</a></li>
+    <li><a href="{{ plugin_public_url }}/.claude-plugin/marketplace.json">.claude-plugin/marketplace.json</a></li>
+    <li><a href="{{ plugin_public_url }}/.cursor-plugin/marketplace.json">.cursor-plugin/marketplace.json</a></li>
+    <li><a href="{{ plugin_public_url }}/plugins/ai-memory.zip">plugins/ai-memory.zip（プラグイン本体）</a></li>
+  </ul>
+
+  <h2>注意</h2>
+  <p>ハッカソン向けの最低限のセキュリティです。個人情報や機密情報は絶対に登録しないでください。</p>
 </body>
 </html>

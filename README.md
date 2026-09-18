@@ -25,21 +25,6 @@ AIメモリーいらんかえ～ @ 【大阪】Zenn Agentic AI ミニハッカ�
 - 自然言語で蓄積情報を検索するためエージェントプラグイン
 - エージェントプラグインをセットアップするための簡単ガイド
 
-プラグイン配布（マーケットプレース）:
-
-```text
-https://storage.googleapis.com/hackathon-ai-memory-plugin
-```
-
-セットアップ手順は [docs/setup.md](docs/setup.md) を参照してください。
-
-あわせて [elastic/agent-skills](https://github.com/elastic/agent-skills) の
-**elasticsearch-esql** スキルのインストールを推奨します。
-
-```bash
-npx skills add elastic/agent-skills --skill elasticsearch-esql
-```
-
 > [!CAUTION]
 > ハッカソンという性質上、セキュリティ面への配慮は最低限です。
 > 個人情報等、センシティブな情報は絶対にアップロードしないでください。
@@ -58,6 +43,10 @@ npx skills add elastic/agent-skills --skill elasticsearch-esql
 規約は必要に応じて変更することがあります。
 
 </details>
+
+## セットアップ
+
+hackathon-ai-memory-pluginの[プラグイン配布サイト](https://storage.googleapis.com/hackathon-ai-memory-plugin)を参照してください。
 
 ## Architecture of AIメモリーいらんかえ～
 

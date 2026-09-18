@@ -3,62 +3,12 @@
 Cursor / Claude Code / Gemini CLI plugin that connects agents to the Kibana
 Agent Builder MCP server for shared hackathon memory (store and recall).
 
-## Marketplace
+## Setup
 
-Distribution site (add this as the marketplace / download source):
+Follow the distribution site (marketplace + setup guide):
 
 ```text
 https://storage.googleapis.com/hackathon-ai-memory-plugin
-```
-
-### Claude Code
-
-```text
-/plugin marketplace add https://storage.googleapis.com/hackathon-ai-memory-plugin/marketplace.json
-/plugin install ai-memory@hackathon-ai-memory
-```
-
-Then set `AI_MEMORY_API_KEY`.
-
-### Cursor
-
-Cursor Team Marketplace currently expects a Git repository. From this GCS site,
-install the zip locally:
-
-```bash
-curl -fsSL "https://storage.googleapis.com/hackathon-ai-memory-plugin/plugins/ai-memory.zip" -o ai-memory.zip
-mkdir -p ~/.cursor/plugins/local
-unzip -o ai-memory.zip -d ~/.cursor/plugins/local
-```
-
-Reload Cursor, then set `AI_MEMORY_API_KEY`.
-
-### Gemini CLI
-
-```bash
-curl -fsSL "https://storage.googleapis.com/hackathon-ai-memory-plugin/plugins/ai-memory.zip" -o ai-memory.zip
-unzip -o ai-memory.zip -d /tmp
-gemini extensions install /tmp/ai-memory
-```
-
-On install, set the **AI Memory API key** (`AI_MEMORY_API_KEY`).
-
-## Recommended skill
-
-Also install **elasticsearch-esql** from
-[elastic/agent-skills](https://github.com/elastic/agent-skills). It helps the
-agent query and aggregate memory data with ES|QL.
-
-```bash
-npx skills add elastic/agent-skills --skill elasticsearch-esql
-```
-
-For Claude Code, you can add the Elastic marketplace and install the
-Elasticsearch plugin (includes `elasticsearch-esql`):
-
-```bash
-claude plugin marketplace add https://github.com/elastic/agent-skills
-claude plugin install elastic-elasticsearch@elastic-agent-skills
 ```
 
 ## Contents
