@@ -49,13 +49,14 @@ AIメモリーいらんかえ～ @ 【大阪】Zenn Agentic AI ミニハッカ�
 ```mermaid
 flowchart LR
     subgraph google-cloud
-        cloud-run-upload["cloud-run (アップロードページ)"]
-        cloud-run-download["cloud-run (ダウンロードページ)"]
+        cloud-run-upload["cloud-run (写真アップロードページ)"]
+        cloud-run-download["cloud-run (写真ダウンロードページ)"]
         eventarc
         cloud-run-process["cloud-run (画像プロセス)"]
         secret-manager
         vision-api["vision-api (OCR処理)"]
-        cloud-storage
+        cloud-storage["cloud-storage (写真保管用)"]
+        cloud-storage-plugin["cloud-storage (プラグイン配布用)"]
     end
     subgraph elastic-cloud
         subgraph kibana
@@ -72,7 +73,8 @@ flowchart LR
 
     ai-agent -- 蓄積情報の検索 --> mcp-server
     ai-agent -- テキスト情報のアップロード --> ingest-pipeline
-    ai-agent -- 画像ファイルのダウンロード --> cloud-run-download
+    ai-agent --> cloud-run-download
+    ai-agent --> cloud-storage-plugin
 
     smart-phone --> cloud-run-upload
     smart-phone --> cloud-storage --> eventarc　--> cloud-run-process
