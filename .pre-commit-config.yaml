@@ -12,6 +12,7 @@ repos:
       - id: check-json
       - id: pretty-format-json
         args: [--autofix, --no-sort-keys]
+      - id: check-toml
 
   - repo: https://github.com/DavidAnson/markdownlint-cli2
     rev: v0.23.2
