@@ -1,47 +1,99 @@
 #!/usr/bin/env python3
-"""Render the ai-memory plugin MCP configs from Jinja templates."""
+"""Render ai-memory plugin configs, marketplaces, and distribution zip."""
 
 from __future__ import annotations
 
 import os
 import sys
+import zipfile
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
-PLUGIN_DIR = Path(__file__).resolve().parent / "plugin-site" / "plugins" / "ai-memory"
-TEMPLATES = (
+SITE_DIR = Path(__file__).resolve().parent / "plugin-site"
+PLUGIN_DIR = SITE_DIR / "plugins" / "ai-memory"
+PLUGIN_TEMPLATES = (
     (".mcp.json.j2", ".mcp.json"),
     ("gemini-extension.json.j2", "gemini-extension.json"),
 )
+SITE_TEMPLATES = (
+    ("marketplace.json.j2", "marketplace.json"),
+    (".claude-plugin/marketplace.json.j2", ".claude-plugin/marketplace.json"),
+    (".cursor-plugin/marketplace.json.j2", ".cursor-plugin/marketplace.json"),
+    ("index.html.j2", "index.html"),
+)
+ZIP_EXCLUDE_SUFFIXES = (".j2", ".zip")
+
+
+def _require_env(name: str) -> str:
+    value = os.environ.get(name, "").strip()
+    if not value:
+        print(
+            f"{name} is required (set it before running make render-plugin).",
+            file=sys.stderr,
+        )
+        raise SystemExit(1)
+    return value
+
+
+def _render(env: Environment, template_name: str, output_path: Path, context: dict) -> None:
+    rendered = env.get_template(template_name).render(**context)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(rendered, encoding="utf-8")
+    print(f"Wrote {output_path}")
+
+
+def _build_zip(plugin_dir: Path, zip_path: Path) -> None:
+    zip_path.parent.mkdir(parents=True, exist_ok=True)
+    if zip_path.exists():
+        zip_path.unlink()
+
+    with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for path in sorted(plugin_dir.rglob("*")):
+            if not path.is_file():
+                continue
+            if path.suffix in ZIP_EXCLUDE_SUFFIXES or path.name.endswith(".j2"):
+                continue
+            if path.resolve() == zip_path.resolve():
+                continue
+            arcname = Path("ai-memory") / path.relative_to(plugin_dir)
+            zf.write(path, arcname.as_posix())
+
+    print(f"Wrote {zip_path}")
 
 
 def main() -> int:
-    kb_endpoint = os.environ.get("KB_ENDPOINT", "").strip()
-    if not kb_endpoint:
-        print(
-            "KB_ENDPOINT is required (set it in .env before running make render-plugin).",
-            file=sys.stderr,
-        )
-        return 1
+    kb_endpoint = _require_env("KB_ENDPOINT")
+    plugin_public_url = _require_env("PLUGIN_PUBLIC_URL").rstrip("/")
 
     kibana_mcp_url = f"{kb_endpoint.rstrip('/')}/api/agent_builder/mcp"
+    context = {
+        "kibana_mcp_url": kibana_mcp_url,
+        "plugin_public_url": plugin_public_url,
+    }
 
-    env = Environment(
+    plugin_env = Environment(
         loader=FileSystemLoader(str(PLUGIN_DIR)),
         undefined=StrictUndefined,
         keep_trailing_newline=True,
         autoescape=False,
     )
-    context = {"kibana_mcp_url": kibana_mcp_url}
+    for template_name, output_name in PLUGIN_TEMPLATES:
+        _render(plugin_env, template_name, PLUGIN_DIR / output_name, context)
 
-    for template_name, output_name in TEMPLATES:
-        rendered = env.get_template(template_name).render(**context)
-        output_path = PLUGIN_DIR / output_name
-        output_path.write_text(rendered, encoding="utf-8")
-        print(f"Wrote {output_path}")
+    site_env = Environment(
+        loader=FileSystemLoader(str(SITE_DIR)),
+        undefined=StrictUndefined,
+        keep_trailing_newline=True,
+        autoescape=False,
+    )
+    for template_name, output_name in SITE_TEMPLATES:
+        _render(site_env, template_name, SITE_DIR / output_name, context)
+
+    _build_zip(PLUGIN_DIR, SITE_DIR / "plugins" / "ai-memory.zip")
 
     print(f"Kibana MCP URL: {kibana_mcp_url}")
+    print(f"Plugin public URL: {plugin_public_url}")
     return 0
 
 

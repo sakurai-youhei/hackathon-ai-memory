@@ -22,8 +22,23 @@ AIメモリーいらんかえ～ @ 【大阪】Zenn Agentic AI ミニハッカ�
 - 写真に写るドキュメントの文字起こし (予定)
 - テキスト情報のアップロード (予定)
 - 写真・テキストで入力された情報の蓄積 (予定)
-- 自然言語で蓄積情報を検索するためエージェントプラグイン (予定)
-- エージェントプラグインをセットアップするための簡単ガイド (予定)
+- 自然言語で蓄積情報を検索するためエージェントプラグイン
+- エージェントプラグインをセットアップするための簡単ガイド
+
+プラグイン配布（マーケットプレース）:
+
+```text
+https://storage.googleapis.com/hackathon-ai-memory-plugin
+```
+
+セットアップ手順は [docs/setup.md](docs/setup.md) を参照してください。
+
+あわせて [elastic/agent-skills](https://github.com/elastic/agent-skills) の
+**elasticsearch-esql** スキルのインストールを推奨します。
+
+```bash
+npx skills add elastic/agent-skills --skill elasticsearch-esql
+```
 
 > [!CAUTION]
 > ハッカソンという性質上、セキュリティ面への配慮は最低限です。

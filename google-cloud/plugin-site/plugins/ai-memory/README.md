@@ -3,6 +3,64 @@
 Cursor / Claude Code / Gemini CLI plugin that connects agents to the Kibana
 Agent Builder MCP server for shared hackathon memory (store and recall).
 
+## Marketplace
+
+Distribution site (add this as the marketplace / download source):
+
+```text
+https://storage.googleapis.com/hackathon-ai-memory-plugin
+```
+
+### Claude Code
+
+```text
+/plugin marketplace add https://storage.googleapis.com/hackathon-ai-memory-plugin/marketplace.json
+/plugin install ai-memory@hackathon-ai-memory
+```
+
+Then set `AI_MEMORY_API_KEY`.
+
+### Cursor
+
+Cursor Team Marketplace currently expects a Git repository. From this GCS site,
+install the zip locally:
+
+```bash
+curl -fsSL "https://storage.googleapis.com/hackathon-ai-memory-plugin/plugins/ai-memory.zip" -o ai-memory.zip
+mkdir -p ~/.cursor/plugins/local
+unzip -o ai-memory.zip -d ~/.cursor/plugins/local
+```
+
+Reload Cursor, then set `AI_MEMORY_API_KEY`.
+
+### Gemini CLI
+
+```bash
+curl -fsSL "https://storage.googleapis.com/hackathon-ai-memory-plugin/plugins/ai-memory.zip" -o ai-memory.zip
+unzip -o ai-memory.zip -d /tmp
+gemini extensions install /tmp/ai-memory
+```
+
+On install, set the **AI Memory API key** (`AI_MEMORY_API_KEY`).
+
+## Recommended skill
+
+Also install **elasticsearch-esql** from
+[elastic/agent-skills](https://github.com/elastic/agent-skills). It helps the
+agent query and aggregate memory data with ES|QL.
+
+```bash
+npx skills add elastic/agent-skills --skill elasticsearch-esql
+```
+
+For Claude Code, you can add the Elastic marketplace and install the
+Elasticsearch plugin (includes `elasticsearch-esql`):
+
+```bash
+claude plugin marketplace add https://github.com/elastic/agent-skills
+claude plugin install elastic-elasticsearch@elastic-agent-skills
+```
+
 ## Contents
 
 - `.mcp.json.j2` — Jinja template for Cursor / Claude (URL from `KB_ENDPOINT`)
@@ -20,32 +78,8 @@ From the repository root (requires `KB_ENDPOINT` in `.env`):
 make render-plugin
 ```
 
-This writes `.mcp.json` and `gemini-extension.json` with:
-
-`{KB_ENDPOINT}/api/agent_builder/mcp`
-
-## Install
-
-### Cursor / Claude Code
-
-Add the plugin marketplace / plugin directory from the distribution site, then
-set `AI_MEMORY_API_KEY`.
-
-### Gemini CLI
-
-After rendering (or downloading the built plugin directory):
-
-```bash
-gemini extensions install /path/to/plugins/ai-memory
-```
-
-On install, set the **AI Memory API key** setting (`AI_MEMORY_API_KEY`).
-
-## Runtime configuration
-
-Set your encoded API key as `AI_MEMORY_API_KEY` (environment variable, Cursor
-plugin variables, Claude Code user config, or Gemini extension settings). Do
-not put the API key in the Jinja templates or commit it.
+This writes `.mcp.json`, `gemini-extension.json`, marketplace manifests,
+`index.html`, and `plugins/ai-memory.zip` using `PLUGIN_PUBLIC_URL`.
 
 ## Caution
 

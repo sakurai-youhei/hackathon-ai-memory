@@ -8,6 +8,11 @@ PLUGIN_BUCKET="${PLUGIN_BUCKET:-hackathon-ai-memory-plugin}"
 PLUGIN_SITE_DIR="${PLUGIN_SITE_DIR:-google-cloud/plugin-site}"
 PLUGIN_PUBLIC_URL="${PLUGIN_PUBLIC_URL:-https://storage.googleapis.com/${PLUGIN_BUCKET}}"
 
+if [[ ! -f "${PLUGIN_SITE_DIR}/marketplace.json" || ! -f "${PLUGIN_SITE_DIR}/plugins/ai-memory.zip" ]]; then
+	echo "Missing rendered marketplace artifacts. Run: make render-plugin" >&2
+	exit 1
+fi
+
 if gcloud storage buckets describe "gs://${PLUGIN_BUCKET}" \
 	--project="${GCP_PROJECT_ID}" >/dev/null 2>&1; then
 	echo "Bucket gs://${PLUGIN_BUCKET} already exists; skipping create."

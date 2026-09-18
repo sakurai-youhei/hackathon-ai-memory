@@ -217,6 +217,11 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Rendered plugin configs (Kibana URL baked from KB_ENDPOINT)
+# Rendered plugin / marketplace artifacts (URLs baked at render time)
+google-cloud/plugin-site/index.html
+google-cloud/plugin-site/marketplace.json
+google-cloud/plugin-site/.claude-plugin/marketplace.json
+google-cloud/plugin-site/.cursor-plugin/marketplace.json
+google-cloud/plugin-site/plugins/ai-memory.zip
 google-cloud/plugin-site/plugins/ai-memory/.mcp.json
 google-cloud/plugin-site/plugins/ai-memory/gemini-extension.json
