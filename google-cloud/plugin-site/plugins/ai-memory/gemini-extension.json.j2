@@ -1,0 +1,22 @@
+{
+  "name": "ai-memory",
+  "version": "0.1.0",
+  "description": "Remember and recall shared hackathon knowledge via Kibana Agent Builder MCP. Use when the user asks to memorize, remember, or search stored notes.",
+  "contextFileName": "GEMINI.md",
+  "settings": [
+    {
+      "name": "AI Memory API key",
+      "description": "Encoded Elasticsearch/Kibana API key used as Authorization: ApiKey <value>",
+      "envVar": "AI_MEMORY_API_KEY",
+      "sensitive": true
+    }
+  ],
+  "mcpServers": {
+    "ai-memory": {
+      "httpUrl": "{{ kibana_mcp_url }}",
+      "headers": {
+        "Authorization": "ApiKey $AI_MEMORY_API_KEY"
+      }
+    }
+  }
+}
