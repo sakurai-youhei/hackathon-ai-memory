@@ -6,7 +6,7 @@ set -euo pipefail
 
 PLUGIN_BUCKET="${PLUGIN_BUCKET:-hackathon-ai-memory-plugin}"
 PLUGIN_SITE_DIR="${PLUGIN_SITE_DIR:-google-cloud/plugin-site}"
-PLUGIN_PUBLIC_URL="${PLUGIN_PUBLIC_URL:-https://storage.googleapis.com/${PLUGIN_BUCKET}/}"
+PLUGIN_PUBLIC_URL="${PLUGIN_PUBLIC_URL:-https://storage.googleapis.com/${PLUGIN_BUCKET}/index.html}"
 
 if gcloud storage buckets describe "gs://${PLUGIN_BUCKET}" \
 	--project="${GCP_PROJECT_ID}" >/dev/null 2>&1; then

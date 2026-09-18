@@ -3,19 +3,19 @@ export
 
 PLUGIN_BUCKET ?= hackathon-ai-memory-plugin
 PLUGIN_SITE_DIR := google-cloud/plugin-site
-PLUGIN_PUBLIC_URL := https://storage.googleapis.com/$(PLUGIN_BUCKET)/
+PLUGIN_PUBLIC_URL := https://storage.googleapis.com/$(PLUGIN_BUCKET)/index.html
 VENV_PYTHON := .venv/bin/python
 VENV_PYTHON_VERSION ?= 3.14
 
-.PHONY: create-venv create-plugin-bucket render-plugin
+.PHONY: create-venv upload-plugin render-plugin
 
 create-venv: $(VENV_PYTHON)
 
 $(VENV_PYTHON):
 	uv venv --python $(VENV_PYTHON_VERSION) .venv
 
-create-plugin-bucket:
-	@./google-cloud/create-plugin-bucket.sh
+upload-plugin:
+	@./google-cloud/upload-plugin.sh
 
 render-plugin: $(VENV_PYTHON)
 	@test -n "$(KB_ENDPOINT)" || (echo "KB_ENDPOINT is required in .env" >&2; exit 1)
