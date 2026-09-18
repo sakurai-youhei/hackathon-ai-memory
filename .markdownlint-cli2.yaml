@@ -1,0 +1,3 @@
+config:
+  # Long Japanese prose is easier to maintain without hard wrapping.
+  MD013: false
