@@ -3,7 +3,7 @@ export
 
 PLUGIN_BUCKET ?= hackathon-ai-memory-plugin
 PLUGIN_SITE_DIR := google-cloud/plugin-site
-PLUGIN_PUBLIC_URL := https://storage.googleapis.com/$(PLUGIN_BUCKET)/index.html
+PLUGIN_PUBLIC_URL := https://storage.googleapis.com/$(PLUGIN_BUCKET)
 VENV_PYTHON := .venv/bin/python
 VENV_PYTHON_VERSION ?= 3.14
 

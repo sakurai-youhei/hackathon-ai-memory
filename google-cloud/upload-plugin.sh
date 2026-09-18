@@ -6,7 +6,7 @@ set -euo pipefail
 
 PLUGIN_BUCKET="${PLUGIN_BUCKET:-hackathon-ai-memory-plugin}"
 PLUGIN_SITE_DIR="${PLUGIN_SITE_DIR:-google-cloud/plugin-site}"
-PLUGIN_PUBLIC_URL="${PLUGIN_PUBLIC_URL:-https://storage.googleapis.com/${PLUGIN_BUCKET}/index.html}"
+PLUGIN_PUBLIC_URL="${PLUGIN_PUBLIC_URL:-https://storage.googleapis.com/${PLUGIN_BUCKET}}"
 
 if gcloud storage buckets describe "gs://${PLUGIN_BUCKET}" \
 	--project="${GCP_PROJECT_ID}" >/dev/null 2>&1; then
@@ -26,6 +26,7 @@ gcloud storage buckets add-iam-policy-binding "gs://${PLUGIN_BUCKET}" \
 	--member=allUsers \
 	--role=roles/storage.objectViewer
 
-gcloud storage cp "${PLUGIN_SITE_DIR}/index.html" "gs://${PLUGIN_BUCKET}/index.html"
+gcloud storage rsync "${PLUGIN_SITE_DIR}" "gs://${PLUGIN_BUCKET}" \
+	--recursive
 
-echo "Plugin distribution URL: ${PLUGIN_PUBLIC_URL}"
+echo "Plugin distribution URL: ${PLUGIN_PUBLIC_URL}/index.html"
