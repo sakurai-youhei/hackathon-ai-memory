@@ -1,7 +1,8 @@
 # AIメモリーいらんかえ～ agent plugin
 
-Cursor / Claude Code / Gemini CLI plugin that connects agents to the Kibana
-Agent Builder MCP server for shared hackathon memory (store and recall).
+Cursor / Claude Code / Gemini CLI / Antigravity CLI plugin that connects
+agents to the Kibana Agent Builder MCP server for shared hackathon memory
+(store and recall).
 
 ## Setup
 
@@ -17,6 +18,8 @@ https://storage.googleapis.com/hackathon-ai-memory-plugin/index.html
 - `gemini-extension.json.j2` — Jinja template for Gemini CLI
 - `.cursor-plugin/plugin.json.j2` — Cursor manifest template (`variables.AI_MEMORY_API_KEY`)
 - `.claude-plugin/plugin.json.j2` — Claude Code manifest template (`userConfig.AI_MEMORY_API_KEY`)
+- `plugin.json.j2` — Antigravity CLI native plugin manifest
+- `mcp_config.json.j2` — Antigravity CLI MCP configuration
 - `VERSION` — shared semantic version for all plugin manifests
 - `GEMINI.md` — Gemini CLI extension context
 - `skills/ai-memory/SKILL.md.j2` — skill template with the Elasticsearch endpoint

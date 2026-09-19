@@ -100,7 +100,21 @@ curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
 gemini extensions install "$tmp_dir/ai-memory"</code></pre>
     </section>
-    
+
+    <section class="agent">
+      <h2>Antigravity CLI</h2>
+      <p>ターミナルで次を実行し、ネイティブプラグインをインストールします。</p>
+      <pre><code>tmp_dir="$(mktemp -d)"
+curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
+unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
+agy plugin install "$tmp_dir/ai-memory"
+agy plugin list</code></pre>
+      <p>Antigravity CLI を起動するシェルで API キーを環境変数に設定します。次の方法ならキーは画面やシェル履歴に表示されません。</p>
+      <pre><code>read -rsp "AI_MEMORY_API_KEY: " AI_MEMORY_API_KEY &amp;&amp; echo
+export AI_MEMORY_API_KEY
+agy</code></pre>
+    </section>
+
     <h2>プラグインを更新する</h2>
     <p>新しいバージョンが公開されたら、利用中のエージェントに応じて次の手順を実行してください。API キーは通常そのまま利用できます。</p>
     <ul>
@@ -109,7 +123,7 @@ gemini extensions install "$tmp_dir/ai-memory"</code></pre>
       <li><strong>Gemini CLI:</strong> <code>gemini extensions update ai-memory</code> を実行します。</li>
     </ul>
     <pre><code>/plugin marketplace update hackathon-ai-memory
-    /plugin update ai-memory@hackathon-ai-memory</code></pre>
+  /plugin update ai-memory@hackathon-ai-memory</code></pre>
 
     <h2>使ってみる</h2>
     <ul>
@@ -164,7 +178,21 @@ curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
 gemini extensions install "$tmp_dir/ai-memory"</code></pre>
     </section>
-    
+
+    <section class="agent">
+      <h2>Antigravity CLI</h2>
+      <p>Run these commands in a terminal to install the native plugin.</p>
+      <pre><code>tmp_dir="$(mktemp -d)"
+curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
+unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
+agy plugin install "$tmp_dir/ai-memory"
+agy plugin list</code></pre>
+      <p>Set the API key in the environment used to start Antigravity CLI. This method keeps the key out of the terminal display and shell history.</p>
+      <pre><code>read -rsp "AI_MEMORY_API_KEY: " AI_MEMORY_API_KEY &amp;&amp; echo
+export AI_MEMORY_API_KEY
+agy</code></pre>
+    </section>
+
     <h2>Update the plugin</h2>
     <p>When a new version is published, follow the instructions for your agent below. Your API key is normally preserved.</p>
     <ul>
@@ -173,7 +201,7 @@ gemini extensions install "$tmp_dir/ai-memory"</code></pre>
       <li><strong>Gemini CLI:</strong> Run <code>gemini extensions update ai-memory</code>.</li>
     </ul>
     <pre><code>/plugin marketplace update hackathon-ai-memory
-    /plugin update ai-memory@hackathon-ai-memory</code></pre>
+  /plugin update ai-memory@hackathon-ai-memory</code></pre>
 
     <h2>Try it</h2>
     <ul>

@@ -21,6 +21,8 @@ PLUGIN_TEMPLATES = (
     (".claude-plugin/plugin.json.j2", ".claude-plugin/plugin.json"),
     (".cursor-plugin/plugin.json.j2", ".cursor-plugin/plugin.json"),
     ("gemini-extension.json.j2", "gemini-extension.json"),
+    ("mcp_config.json.j2", "mcp_config.json"),
+    ("plugin.json.j2", "plugin.json"),
     ("skills/ai-memory/SKILL.md.j2", "skills/ai-memory/SKILL.md"),
 )
 SITE_TEMPLATES = (

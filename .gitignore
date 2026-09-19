@@ -225,5 +225,7 @@ google-cloud/plugin-site/.cursor-plugin/marketplace.json
 google-cloud/plugin-site/plugins/ai-memory.zip
 google-cloud/plugin-site/plugins/ai-memory-*.zip
 google-cloud/plugin-site/plugins/ai-memory/.mcp.json
+google-cloud/plugin-site/plugins/ai-memory/mcp_config.json
+google-cloud/plugin-site/plugins/ai-memory/plugin.json
 google-cloud/plugin-site/plugins/ai-memory/gemini-extension.json
 google-cloud/plugin-site/plugins/ai-memory/skills/ai-memory/SKILL.md

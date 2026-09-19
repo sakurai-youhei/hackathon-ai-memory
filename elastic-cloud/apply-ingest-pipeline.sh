@@ -44,7 +44,8 @@ if config.get("embedding_size") != 1024:
 PY
 
 request GET "/_ml/trained_models/${MODEL_ID}/_stats" "${WORK_DIR}/stats.json"
-MODEL_STATE="$(python3 - "${WORK_DIR}/stats.json" <<'PY'
+MODEL_STATE="$(
+	python3 - "${WORK_DIR}/stats.json" <<'PY'
 import json
 import sys
 
@@ -67,7 +68,7 @@ request PUT "/_ingest/pipeline/${PIPELINE_ID}" "${WORK_DIR}/put.json" \
 echo "Smoke-testing Japanese and English embeddings separately..."
 request POST "/_ingest/pipeline/${PIPELINE_ID}/_simulate" "${WORK_DIR}/simulate.json" \
 	-H 'Content-Type: application/json' \
-	--data-binary '{"docs":[{"_index":"00000000-0000-0000-0000-000000000000-ai-memory","_source":{"text":"昨日の会議で決まった新しい検索機能の仕様を記憶してください。"}},{"_index":"00000000-0000-0000-0000-000000000000-ai-memory","_source":{"text":"Remember the specification for the new search feature agreed in yesterday’s meeting."}}]}'
+	--data-binary '{"docs":[{"_index":"00000000-0000-0000-0000-000000000000-ai-memory","_source":{"text":"昨日の会議で決まった新しい検索機能の仕様を記憶してください。"}},{"_index":"00000000-0000-0000-0000-000000000000-ai-memory","_source":{"text":"Remember the specification for the new search feature agreed in the meeting yesterday."}}]}'
 
 python3 - "${WORK_DIR}/simulate.json" <<'PY'
 import json

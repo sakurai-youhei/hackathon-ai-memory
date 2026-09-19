@@ -12,7 +12,7 @@ VENV_PYTHON_VERSION ?= 3.14
 # All models are in-cluster (elasticsearch service or Elastic Inference Service) — no Cloud Run required.
 AI_MEMORY_MODELS ?= e5 jina_v3 jina_v5s
 
-.PHONY: create-venv upload-plugin render-plugin bump-plugin-version issue-api-key apply-index-template apply-ingest-pipeline
+.PHONY: create-venv upload-plugin render-plugin bump-plugin-version issue-api-key deploy apply-index-template apply-ingest-pipeline
 
 create-venv: $(VENV_PYTHON)
 
@@ -37,6 +37,8 @@ issue-api-key:
 	@test -n "$(KB_ENDPOINT)" || (echo "KB_ENDPOINT is required in .env" >&2; exit 1)
 	@test -n "$(uuid)" || (echo "Usage: make issue-api-key uuid=<UUID>" >&2; exit 2)
 	@python3 elastic-cloud/render-api-key-instructions.py
+
+deploy: apply-index-template apply-ingest-pipeline upload-plugin
 
 apply-index-template:
 	@test -n "$${ES_ENDPOINT:-}" || (echo "ES_ENDPOINT is required in .env" >&2; exit 1)
