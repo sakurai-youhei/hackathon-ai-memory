@@ -1,0 +1,24 @@
+{
+  "template": {
+    "mappings": {
+      "properties": {
+        "semantic_qwen3": {
+          "type": "semantic_text",
+          "inference_id": "ai-memory-qwen3",
+          "chunking_settings": {
+            "strategy": "none"
+          }
+        }
+      }
+    }
+  },
+  "version": 1,
+  "_meta": {
+    "description": "semantic_text slot backed by Qwen3-Embedding-0.6B (1024 dims, 32K-token window, external TEI). One vector per document for gist-level retrieval.",
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "inference_id": "ai-memory-qwen3",
+    "dimensions": 1024,
+    "max_input_tokens": 32768,
+    "managed_by": "hackathon-ai-memory"
+  }
+}

@@ -1,1 +1,363 @@
-{}
+{
+  "description": "ai-memory normalization pipeline. Embedding is handled by semantic_text + copy_to, so this pipeline only normalizes: timestamps, owner, OCR payload shape, whitespace, and language detection.",
+  "version": 1,
+  "_meta": {
+    "project": "hackathon-ai-memory",
+    "managed_by": "hackathon-ai-memory"
+  },
+  "processors": [
+    {
+      "script": {
+        "tag": "coerce-source-scalar",
+        "description": "Accept a bare string in 'source' from sloppy agent writers and lift it into source.app.",
+        "if": "ctx.source instanceof String",
+        "lang": "painless",
+        "source": "def v = ctx.source; ctx.source = new HashMap(); ctx.source.app = v;"
+      }
+    },
+    {
+      "script": {
+        "tag": "coerce-owner-object",
+        "description": "Accept {\"owner\": {\"uuid\": \"...\"}} and flatten it to the keyword form.",
+        "if": "ctx.owner instanceof Map",
+        "lang": "painless",
+        "source": "ctx.owner = ctx.owner.uuid;"
+      }
+    },
+    {
+      "set": {
+        "tag": "default-event-kind",
+        "description": "Mark this as a normal memory document; the on_failure handler overrides it.",
+        "field": "event.kind",
+        "value": "memory",
+        "override": false
+      }
+    },
+    {
+      "set": {
+        "tag": "default-timestamp",
+        "description": "Event time defaults to ingest time when the writer did not supply one.",
+        "field": "@timestamp",
+        "value": "{{{_ingest.timestamp}}}",
+        "override": false
+      }
+    },
+    {
+      "set": {
+        "tag": "default-created-at",
+        "description": "created_at is stamped once and preserved across re-indexing of the same _id.",
+        "field": "created_at",
+        "copy_from": "@timestamp",
+        "override": false
+      }
+    },
+    {
+      "set": {
+        "tag": "always-updated-at",
+        "description": "updated_at is refreshed on every write.",
+        "field": "updated_at",
+        "value": "{{{_ingest.timestamp}}}",
+        "override": true
+      }
+    },
+    {
+      "gsub": {
+        "tag": "owner-from-index-name",
+        "description": "Derive the owner UUID from the '<uuid>-ai-memory' index name so writers never have to send it.",
+        "if": "ctx.owner == null",
+        "field": "_index",
+        "pattern": "-ai-memory$",
+        "replacement": "",
+        "target_field": "owner"
+      }
+    },
+    {
+      "rename": {
+        "tag": "compat-gcs-uri",
+        "description": "Accept top-level gcs_uri from Cloud Run and move it under attachment.",
+        "field": "gcs_uri",
+        "target_field": "attachment.gcs_uri",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "tag": "compat-download-url",
+        "description": "Accept top-level download_url from Cloud Run and move it under attachment.",
+        "field": "download_url",
+        "target_field": "attachment.download_url",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "tag": "compat-mime-type",
+        "description": "Normalize mime_type to attachment.content_type.",
+        "field": "mime_type",
+        "target_field": "attachment.content_type",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "tag": "compat-content-type",
+        "description": "Normalize bare content_type to attachment.content_type.",
+        "field": "content_type",
+        "target_field": "attachment.content_type",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "tag": "compat-ocr-locale",
+        "description": "Normalize ocr.locale to ocr.language.",
+        "field": "ocr.locale",
+        "target_field": "ocr.language",
+        "ignore_missing": true
+      }
+    },
+    {
+      "rename": {
+        "tag": "promote-ocr-text",
+        "description": "OCR output becomes the main searchable text unless the writer already supplied one.",
+        "if": "ctx.text == null",
+        "field": "ocr.text",
+        "target_field": "text",
+        "ignore_missing": true
+      }
+    },
+    {
+      "dissect": {
+        "tag": "split-gcs-uri",
+        "description": "Split gs://bucket/path/to/object.jpg into bucket and object_name for filtering and signed URL construction.",
+        "field": "attachment.gcs_uri",
+        "pattern": "gs://%{attachment.bucket}/%{attachment.object_name}",
+        "ignore_missing": true,
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "tag": "source-type-photo",
+        "description": "Documents with a GCS attachment are photo memories.",
+        "if": "ctx?.attachment?.gcs_uri != null",
+        "field": "source.type",
+        "value": "photo",
+        "override": false
+      }
+    },
+    {
+      "set": {
+        "tag": "source-type-text",
+        "description": "Everything else is a text memory (agent upload).",
+        "field": "source.type",
+        "value": "text",
+        "override": false
+      }
+    },
+    {
+      "set": {
+        "tag": "default-ocr-engine",
+        "description": "Assume Google Vision when the Cloud Run OCR service does not name itself.",
+        "if": "ctx?.ocr != null && ctx?.ocr?.engine == null",
+        "field": "ocr.engine",
+        "value": "google-vision",
+        "override": false
+      }
+    },
+    {
+      "gsub": {
+        "tag": "normalize-nbsp",
+        "description": "Turn no-break spaces (U+00A0) and ideographic spaces (U+3000) into plain spaces before any other cleanup.",
+        "field": "text",
+        "pattern": "[\u00a0\u3000]",
+        "replacement": " ",
+        "ignore_missing": true
+      }
+    },
+    {
+      "gsub": {
+        "tag": "squeeze-cjk-spaces",
+        "description": "Cloud Vision inserts spaces between Japanese glyphs; remove them so kuromoji tokenizes correctly. Photo documents only to avoid damaging agent-authored prose.",
+        "if": "ctx?.source?.type == \"photo\"",
+        "field": "text",
+        "pattern": "(?<=[\\p{IsHan}\\p{IsHiragana}\\p{IsKatakana}])[ ]+(?=[\\p{IsHan}\\p{IsHiragana}\\p{IsKatakana}])",
+        "replacement": "",
+        "ignore_missing": true
+      }
+    },
+    {
+      "gsub": {
+        "tag": "collapse-spaces",
+        "description": "Collapse runs of spaces and tabs into a single space.",
+        "field": "text",
+        "pattern": "[ \\t]{2,}",
+        "replacement": " ",
+        "ignore_missing": true
+      }
+    },
+    {
+      "gsub": {
+        "tag": "collapse-blank-lines",
+        "description": "Keep paragraph breaks meaningful for the sentence and recursive chunkers.",
+        "field": "text",
+        "pattern": "\\n{3,}",
+        "replacement": "\n\n",
+        "ignore_missing": true
+      }
+    },
+    {
+      "trim": {
+        "tag": "trim-text",
+        "field": "text",
+        "ignore_missing": true
+      }
+    },
+    {
+      "trim": {
+        "tag": "trim-title",
+        "field": "title",
+        "ignore_missing": true
+      }
+    },
+    {
+      "trim": {
+        "tag": "trim-summary",
+        "field": "summary",
+        "ignore_missing": true
+      }
+    },
+    {
+      "fail": {
+        "tag": "require-content",
+        "description": "A memory with neither text nor a photo attachment is unsearchable. Tombstone it via on_failure.",
+        "if": "(ctx.text == null || ctx.text.trim().isEmpty()) && ctx?.attachment?.gcs_uri == null",
+        "message": "ai-memory: a document must carry non-empty 'text' (or 'ocr.text') or an 'attachment.gcs_uri'"
+      }
+    },
+    {
+      "inference": {
+        "tag": "detect-language",
+        "description": "lang_ident_model_1 ships with the cluster and needs no additional allocation.",
+        "if": "ctx.language == null && ctx.text != null",
+        "model_id": "lang_ident_model_1",
+        "inference_config": {
+          "classification": {
+            "num_top_classes": 1
+          }
+        },
+        "field_map": {
+          "text": "text"
+        },
+        "target_field": "_ml.lang_ident",
+        "ignore_failure": true
+      }
+    },
+    {
+      "set": {
+        "tag": "apply-language",
+        "description": "Only trust a confident prediction; short OCR fragments are frequently ambiguous.",
+        "if": "ctx?._ml?.lang_ident?.prediction_probability != null && ctx._ml.lang_ident.prediction_probability > 0.5",
+        "field": "language",
+        "copy_from": "_ml.lang_ident.predicted_value",
+        "override": false
+      }
+    },
+    {
+      "remove": {
+        "tag": "drop-ml-scratch",
+        "description": "Clean up the inference scratch field; it is not part of the document schema.",
+        "field": "_ml",
+        "ignore_missing": true
+      }
+    },
+    {
+      "set": {
+        "tag": "default-language",
+        "description": "ISO 639-2 'und' (undetermined) keeps the field non-null so agents can filter on it safely.",
+        "field": "language",
+        "value": "und",
+        "override": false
+      }
+    },
+    {
+      "script": {
+        "tag": "content-stats",
+        "description": "Cheap size metric for ES|QL analytics and for spotting truncated OCR.",
+        "if": "ctx.text instanceof String",
+        "lang": "painless",
+        "source": "ctx.stats = ctx.stats instanceof Map ? ctx.stats : new HashMap(); ctx.stats.char_count = ctx.text.length();"
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "description": "Mark the tombstone document so agents and ES|QL queries can distinguish it from real memories.",
+        "field": "event.kind",
+        "value": "pipeline_error",
+        "override": true
+      }
+    },
+    {
+      "set": {
+        "field": "@timestamp",
+        "value": "{{{_ingest.timestamp}}}",
+        "override": false
+      }
+    },
+    {
+      "set": {
+        "field": "created_at",
+        "copy_from": "@timestamp",
+        "override": false
+      }
+    },
+    {
+      "set": {
+        "field": "updated_at",
+        "value": "{{{_ingest.timestamp}}}",
+        "override": true
+      }
+    },
+    {
+      "gsub": {
+        "description": "Derive owner from the index name inside on_failure.",
+        "if": "ctx.owner == null",
+        "field": "_index",
+        "pattern": "-ai-memory$",
+        "replacement": "",
+        "target_field": "owner"
+      }
+    },
+    {
+      "set": {
+        "field": "error.pipeline",
+        "value": "{{{_ingest.on_failure_pipeline}}}",
+        "ignore_empty_value": true
+      }
+    },
+    {
+      "set": {
+        "field": "error.processor_type",
+        "value": "{{{_ingest.on_failure_processor_type}}}",
+        "ignore_empty_value": true
+      }
+    },
+    {
+      "set": {
+        "description": "Key on this tag (not processor_type) when filtering tombstones; 'fail' wrapped in 'if' reports type 'conditional'.",
+        "field": "error.processor_tag",
+        "value": "{{{_ingest.on_failure_processor_tag}}}",
+        "ignore_empty_value": true
+      }
+    },
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{{_ingest.on_failure_message}}}",
+        "ignore_empty_value": true
+      }
+    }
+  ]
+}

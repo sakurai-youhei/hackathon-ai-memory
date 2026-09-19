@@ -1,1 +1,28 @@
-{}
+{
+  "index_patterns": [
+    "*-ai-memory"
+  ],
+  "priority": 550,
+  "version": 1,
+  "composed_of": [
+    "ai-memory@settings",
+    "ai-memory@mappings",
+    "ai-memory@semantic-e5",
+    "ai-memory@semantic-bge-m3",
+    "ai-memory@semantic-qwen3",
+    "ai-memory@custom"
+  ],
+  "ignore_missing_component_templates": [
+    "ai-memory@semantic-e5",
+    "ai-memory@semantic-bge-m3",
+    "ai-memory@semantic-qwen3",
+    "ai-memory@custom"
+  ],
+  "allow_auto_create": true,
+  "_meta": {
+    "description": "Per-user AI memory indices named <uuid>-ai-memory. Plain indices: no data stream, no ILM (Elastic Cloud Serverless). Semantic component templates are optional; missing ones are silently skipped.",
+    "project": "hackathon-ai-memory",
+    "repository": "https://github.com/sakurai-youhei/hackathon-ai-memory",
+    "managed_by": "hackathon-ai-memory"
+  }
+}
