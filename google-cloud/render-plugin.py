@@ -33,6 +33,7 @@ SITE_TEMPLATES = (
     ("index.html.j2", "index.html"),
 )
 ZIP_EXCLUDE_SUFFIXES = (".j2", ".zip")
+ZIP_EXCLUDE_PARTS = {"__pycache__"}
 
 
 def _require_env(name: str) -> str:
@@ -76,6 +77,8 @@ def _build_zip(plugin_dir: Path, zip_path: Path) -> None:
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         for path in sorted(plugin_dir.rglob("*")):
             if not path.is_file():
+                continue
+            if ZIP_EXCLUDE_PARTS.intersection(path.parts) or path.suffix == ".pyc":
                 continue
             if path.suffix in ZIP_EXCLUDE_SUFFIXES or path.name.endswith(".j2"):
                 continue

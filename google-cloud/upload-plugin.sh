@@ -40,7 +40,8 @@ gcloud storage buckets add-iam-policy-binding "gs://${PLUGIN_BUCKET}" \
 
 gcloud storage rsync "${PLUGIN_SITE_DIR}" "gs://${PLUGIN_BUCKET}" \
 	--recursive \
-	--checksums-only
+	--checksums-only \
+	--exclude='(^|/)__pycache__/.*|.*\.pyc$'
 
 gcloud storage objects update \
 	"gs://${PLUGIN_BUCKET}/index.html" \
