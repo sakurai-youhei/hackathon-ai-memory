@@ -55,7 +55,6 @@ hackathon-ai-memory-pluginの[プラグイン配布サイト](https://storage.go
 flowchart LR
     subgraph google-cloud
         cloud-run-upload["cloud-run (写真アップロードページ)"]
-        cloud-run-download["cloud-run (写真ダウンロードページ)"]
         eventarc
         cloud-run-process["cloud-run (画像プロセス)"]
         secret-manager
@@ -78,7 +77,6 @@ flowchart LR
 
     ai-agent -- 蓄積情報の検索 --> mcp-server
     ai-agent -- テキスト情報のアップロード --> ingest-pipeline
-    ai-agent --> cloud-run-download
     ai-agent --> cloud-storage-plugin
 
     smart-phone --> cloud-run-upload
