@@ -5,12 +5,16 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 from typing import Any
 from urllib import error, request
 
 SERVER_INFO = {"name": "ai-memory-writer", "version": "1.0.0"}
 TOOL_NAME = "store_memory"
+INDEX_PATTERN = re.compile(
+    r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}-ai-memory$"
+)
 
 
 def _required_env(name: str) -> str:
@@ -27,6 +31,10 @@ def store_memory(content: str) -> dict[str, Any]:
 
     endpoint = _required_env("AI_MEMORY_ES_ENDPOINT").rstrip("/")
     index = _required_env("AI_MEMORY_INDEX")
+    if INDEX_PATTERN.fullmatch(index) is None:
+        raise RuntimeError(
+            "Invalid AI_MEMORY_INDEX: expected <lowercase canonical UUID>-ai-memory"
+        )
     api_key = _required_env("AI_MEMORY_API_KEY")
     body = json.dumps({"text": content.strip()}, ensure_ascii=False).encode()
     api_request = request.Request(

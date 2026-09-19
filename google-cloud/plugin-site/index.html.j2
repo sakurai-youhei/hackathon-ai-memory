@@ -72,14 +72,14 @@
     <p>プラグインバージョン: <code>{{ plugin_version }}</code></p>
 
     <h2>はじめる前に</h2>
-    <p>発行された <code>AI_MEMORY_API_KEY</code> を用意し、利用するエージェントを選んでください。インストール時または初回読み込み時に入力します。</p>
+    <p>発行された <code>AI_MEMORY_API_KEY</code> と、そのキーに対応する <code>AI_MEMORY_INDEX</code>（<code>&lt;uuid&gt;-ai-memory</code>）を用意し、利用するエージェントを選んでください。インストール時または初回読み込み時に入力します。</p>
 
     <section class="agent">
       <h2>Claude Code</h2>
       <p>Claude Code を起動し、チャット欄で次の2つを順に実行します。</p>
       <pre><code>/plugin marketplace add {{ marketplace_url }}
 /plugin install ai-memory@hackathon-ai-memory</code></pre>
-      <p>プラグインを有効化すると表示される設定画面で API キーを入力し、Claude Code を再起動してください。</p>
+      <p>プラグインを有効化すると表示される設定画面で API キーとインデックス名を入力し、Claude Code を再起動してください。</p>
     </section>
 
     <section class="agent">
@@ -89,12 +89,12 @@
 mkdir -p ~/.cursor/plugins/local
 unzip -o ai-memory.zip -d ~/.cursor/plugins/local
 rm ai-memory.zip</code></pre>
-      <p>プラグイン設定の <code>AI_MEMORY_API_KEY</code> に API キーを設定してください。</p>
+      <p>プラグイン設定の <code>AI_MEMORY_API_KEY</code> に API キー、<code>AI_MEMORY_INDEX</code> にインデックス名を設定してください。</p>
     </section>
 
     <section class="agent">
       <h2>Gemini CLI</h2>
-      <p>ターミナルで次を実行します。インストール中に API キーを入力してください。</p>
+      <p>ターミナルで次を実行します。インストール中に API キーとインデックス名を入力してください。</p>
       <pre><code>tmp_dir="$(mktemp -d)"
 curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
@@ -111,7 +111,8 @@ agy plugin install "$tmp_dir/ai-memory"
 agy plugin list</code></pre>
       <p>Antigravity CLI を起動するシェルで API キーを環境変数に設定します。次の方法ならキーは画面やシェル履歴に表示されません。</p>
       <pre><code>read -rsp "AI_MEMORY_API_KEY: " AI_MEMORY_API_KEY &amp;&amp; echo
-export AI_MEMORY_API_KEY
+read -rp "AI_MEMORY_INDEX: " AI_MEMORY_INDEX
+export AI_MEMORY_API_KEY AI_MEMORY_INDEX
 agy</code></pre>
     </section>
 
@@ -150,14 +151,14 @@ claude plugin update ai-memory@hackathon-ai-memory</code></pre>
     <p>Plugin version: <code>{{ plugin_version }}</code></p>
 
     <h2>Before you begin</h2>
-    <p>Have your issued <code>AI_MEMORY_API_KEY</code> ready, then choose your agent below. You will enter the key during installation or initial loading.</p>
+    <p>Have your issued <code>AI_MEMORY_API_KEY</code> and its corresponding <code>AI_MEMORY_INDEX</code> (<code>&lt;uuid&gt;-ai-memory</code>) ready, then choose your agent below. You will enter both during installation or initial loading.</p>
 
     <section class="agent">
       <h2>Claude Code</h2>
       <p>Start Claude Code and run these two commands in the chat, in order.</p>
       <pre><code>/plugin marketplace add {{ marketplace_url }}
 /plugin install ai-memory@hackathon-ai-memory</code></pre>
-      <p>Enter the API key when the configuration dialog appears as the plugin is enabled, then restart Claude Code.</p>
+      <p>Enter the API key and index name when the configuration dialog appears as the plugin is enabled, then restart Claude Code.</p>
     </section>
 
     <section class="agent">
@@ -167,12 +168,12 @@ claude plugin update ai-memory@hackathon-ai-memory</code></pre>
 mkdir -p ~/.cursor/plugins/local
 unzip -o ai-memory.zip -d ~/.cursor/plugins/local
 rm ai-memory.zip</code></pre>
-      <p>Set the API key as <code>AI_MEMORY_API_KEY</code> in the plugin settings.</p>
+      <p>Set the API key as <code>AI_MEMORY_API_KEY</code> and the index name as <code>AI_MEMORY_INDEX</code> in the plugin settings.</p>
     </section>
 
     <section class="agent">
       <h2>Gemini CLI</h2>
-      <p>Run these commands in a terminal. Enter the API key during installation.</p>
+      <p>Run these commands in a terminal. Enter the API key and index name during installation.</p>
       <pre><code>tmp_dir="$(mktemp -d)"
 curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
@@ -189,7 +190,8 @@ agy plugin install "$tmp_dir/ai-memory"
 agy plugin list</code></pre>
       <p>Set the API key in the environment used to start Antigravity CLI. This method keeps the key out of the terminal display and shell history.</p>
       <pre><code>read -rsp "AI_MEMORY_API_KEY: " AI_MEMORY_API_KEY &amp;&amp; echo
-export AI_MEMORY_API_KEY
+read -rp "AI_MEMORY_INDEX: " AI_MEMORY_INDEX
+export AI_MEMORY_API_KEY AI_MEMORY_INDEX
 agy</code></pre>
     </section>
 

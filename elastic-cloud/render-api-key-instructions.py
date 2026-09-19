@@ -47,6 +47,7 @@ def main() -> int:
 
     print(f"URL: {create_url}")
     print(f"Name: {owner_uuid}-ai-memory")
+    print(f"Index: {owner_uuid}-ai-memory")
     print("Control security privileges:")
     role_descriptors = {f"{owner_uuid}-ai-memory": role}
     print(json.dumps(role_descriptors, ensure_ascii=False, indent=2))

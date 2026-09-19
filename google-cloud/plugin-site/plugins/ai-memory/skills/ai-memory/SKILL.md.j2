@@ -20,7 +20,7 @@ Store and retrieve shared knowledge with the `ai-memory` MCP tools.
 ## Connection details
 
 - Elasticsearch endpoint: `{{ es_endpoint }}`
-- Memory index: `{{ memory_index }}`
+- Memory index: `$AI_MEMORY_INDEX`
 - Authentication: `Authorization: ApiKey $AI_MEMORY_API_KEY`
 
 The API key is supplied securely by the plugin. Never print, store, or include
@@ -43,7 +43,7 @@ already present in the shell environment:
 ```bash
 curl --fail-with-body --silent --show-error \
   --request POST \
-  "{{ es_endpoint }}/{{ memory_index }}/_doc" \
+  "{{ es_endpoint }}/${AI_MEMORY_INDEX}/_doc" \
   --header "Authorization: ApiKey ${AI_MEMORY_API_KEY}" \
   --header "Content-Type: application/json" \
   --data '{"text":"The searchable memory to store"}'

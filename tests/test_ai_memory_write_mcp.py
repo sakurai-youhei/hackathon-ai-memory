@@ -35,6 +35,8 @@ class FakeResponse:
 
 
 class AiMemoryWriteMcpTest(unittest.TestCase):
+    INDEX = "00000000-0000-4000-8000-000000000000-ai-memory"
+
     def test_lists_store_memory_tool(self) -> None:
         response = writer.handle_message(
             {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
@@ -45,11 +47,11 @@ class AiMemoryWriteMcpTest(unittest.TestCase):
     @mock.patch.object(writer.request, "urlopen")
     def test_store_memory_uses_private_environment(self, urlopen: mock.Mock) -> None:
         urlopen.return_value = FakeResponse(
-            {"_id": "memory-1", "_index": "owner-ai-memory", "result": "created"}
+            {"_id": "memory-1", "_index": self.INDEX, "result": "created"}
         )
         environment = {
             "AI_MEMORY_ES_ENDPOINT": "https://example.test/",
-            "AI_MEMORY_INDEX": "owner-ai-memory",
+            "AI_MEMORY_INDEX": self.INDEX,
             "AI_MEMORY_API_KEY": "secret-key",
         }
 
@@ -58,11 +60,24 @@ class AiMemoryWriteMcpTest(unittest.TestCase):
 
         api_request = urlopen.call_args.args[0]
         self.assertEqual(
-            api_request.full_url, "https://example.test/owner-ai-memory/_doc"
+            api_request.full_url, f"https://example.test/{self.INDEX}/_doc"
         )
         self.assertEqual(api_request.get_header("Authorization"), "ApiKey secret-key")
         self.assertEqual(json.loads(api_request.data), {"text": "Remember this"})
         self.assertEqual(result["id"], "memory-1")
+
+    def test_rejects_an_index_outside_the_uuid_scope(self) -> None:
+        environment = {
+            "AI_MEMORY_ES_ENDPOINT": "https://example.test",
+            "AI_MEMORY_INDEX": "other-index",
+            "AI_MEMORY_API_KEY": "secret-key",
+        }
+
+        with (
+            mock.patch.dict(os.environ, environment, clear=True),
+            self.assertRaisesRegex(RuntimeError, "Invalid AI_MEMORY_INDEX"),
+        ):
+            writer.store_memory("Remember this")
 
     def test_tool_error_does_not_expose_missing_secret(self) -> None:
         with mock.patch.dict(os.environ, {}, clear=True):

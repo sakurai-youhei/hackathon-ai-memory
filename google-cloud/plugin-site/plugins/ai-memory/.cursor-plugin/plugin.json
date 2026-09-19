@@ -2,7 +2,7 @@
   "name": "ai-memory",
   "displayName": "AI\u30e1\u30e2\u30ea\u30fc\u3044\u3089\u3093\u304b\u3048\uff5e",
   "description": "Remember and recall shared hackathon knowledge via Kibana Agent Builder MCP. Use when the user asks to memorize, remember, or search stored notes.",
-  "version": "0.1.28",
+  "version": "0.1.31",
   "author": {
     "name": "sakurai-youhei"
   },
@@ -24,10 +24,16 @@
         "type": "string",
         "title": "AI Memory API key",
         "description": "Encoded Elasticsearch/Kibana API key used as Authorization: ApiKey <value>"
+      },
+      "AI_MEMORY_INDEX": {
+        "type": "string",
+        "title": "AI Memory index",
+        "description": "UUID-scoped Elasticsearch index, for example <uuid>-ai-memory"
       }
     },
     "required": [
-      "AI_MEMORY_API_KEY"
+      "AI_MEMORY_API_KEY",
+      "AI_MEMORY_INDEX"
     ]
   }
 }

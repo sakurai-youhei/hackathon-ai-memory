@@ -14,7 +14,6 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 SITE_DIR = Path(__file__).resolve().parent / "plugin-site"
 PLUGIN_DIR = SITE_DIR / "plugins" / "ai-memory"
 VERSION_FILE = PLUGIN_DIR / "VERSION"
-MEMORY_INDEX = "c68a3344-6870-433f-9834-5bc11694307a-ai-memory"
 SEMVER_PATTERN = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PLUGIN_TEMPLATES = (
     (".mcp.json.j2", ".mcp.json"),
@@ -101,7 +100,6 @@ def main() -> int:
     context = {
         "es_endpoint": es_endpoint,
         "kibana_mcp_url": kibana_mcp_url,
-        "memory_index": MEMORY_INDEX,
         "plugin_public_url": plugin_public_url,
         "plugin_archive_url": f"{plugin_public_url}/plugins/{plugin_archive_name}",
         "marketplace_url": (f"{plugin_public_url}/marketplace.json?v={plugin_version}"),
