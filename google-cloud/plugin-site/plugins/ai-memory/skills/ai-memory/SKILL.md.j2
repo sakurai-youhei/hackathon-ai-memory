@@ -9,8 +9,7 @@ description: >-
 
 # AI Memory
 
-Store shared knowledge directly in Elasticsearch and retrieve it with the
-`ai-memory` MCP tools.
+Store and retrieve shared knowledge with the `ai-memory` MCP tools.
 
 ## When to use
 
@@ -24,13 +23,22 @@ Store shared knowledge directly in Elasticsearch and retrieve it with the
 - Memory index: `{{ memory_index }}`
 - Authentication: `Authorization: ApiKey $AI_MEMORY_API_KEY`
 
-The API key is supplied by the plugin as `AI_MEMORY_API_KEY`. Never print,
-store, or include its value in a response.
+The API key is supplied securely by the plugin. Never print, store, or include
+its value in a response.
 
 ## Store a memory
 
 Create a concise, searchable summary containing only facts the user supplied,
-JSON-encode it, and index it in the `content` field. For example:
+then call the `store_memory` tool from the `ai-memory-writer` MCP server. Pass
+the summary in the tool's `content` argument.
+
+Do not use Bash or `curl` when the `store_memory` tool is available. Plugin
+configuration values are intentionally not exported to Bash commands, while
+the writer tool receives the API key through its private MCP environment.
+
+For clients that do not expose the writer tool, index the summary in the
+`content` field with the following fallback only when `AI_MEMORY_API_KEY` is
+already present in the shell environment:
 
 ```bash
 curl --fail-with-body --silent --show-error \
@@ -63,7 +71,8 @@ npx skills add elastic/agent-skills --skill elasticsearch-esql
 
 ## Instructions
 
-1. Store memories through the Elasticsearch indexing API described above.
+1. Store memories with the `ai-memory-writer` MCP tool. Use the direct
+   Elasticsearch API only as the documented fallback.
 2. Retrieve memories through the `ai-memory` MCP tools or ES|QL.
 3. Do not invent facts that the user did not provide.
 4. Respond in Japanese when the user writes in Japanese, and in English when

@@ -6,6 +6,18 @@
       "headers": {
         "Authorization": "ApiKey ${user_config.AI_MEMORY_API_KEY}"
       }
+    },
+    "ai-memory-writer": {
+      "type": "stdio",
+      "command": "python3",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/ai-memory-write-mcp.py"
+      ],
+      "env": {
+        "AI_MEMORY_API_KEY": "${user_config.AI_MEMORY_API_KEY}",
+        "AI_MEMORY_ES_ENDPOINT": "{{ es_endpoint }}",
+        "AI_MEMORY_INDEX": "{{ memory_index }}"
+      }
     }
   }
 }
