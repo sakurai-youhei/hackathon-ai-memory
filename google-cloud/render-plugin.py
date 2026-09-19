@@ -87,6 +87,7 @@ def main() -> int:
     kb_endpoint = _require_env("KB_ENDPOINT")
     plugin_public_url = _require_env("PLUGIN_PUBLIC_URL").rstrip("/")
     plugin_version = _read_plugin_version()
+    plugin_archive_name = f"ai-memory-{plugin_version}.zip"
 
     kibana_mcp_url = f"{kb_endpoint.rstrip('/')}/api/agent_builder/mcp"
     context = {
@@ -94,6 +95,10 @@ def main() -> int:
         "kibana_mcp_url": kibana_mcp_url,
         "memory_index": MEMORY_INDEX,
         "plugin_public_url": plugin_public_url,
+        "plugin_archive_url": f"{plugin_public_url}/plugins/{plugin_archive_name}",
+        "marketplace_url": (
+            f"{plugin_public_url}/marketplace.json?v={plugin_version}"
+        ),
         "plugin_version": plugin_version,
     }
 
@@ -115,6 +120,7 @@ def main() -> int:
     for template_name, output_name in SITE_TEMPLATES:
         _render(site_env, template_name, SITE_DIR / output_name, context)
 
+    _build_zip(PLUGIN_DIR, SITE_DIR / "plugins" / plugin_archive_name)
     _build_zip(PLUGIN_DIR, SITE_DIR / "plugins" / "ai-memory.zip")
 
     print(f"Kibana MCP URL: {kibana_mcp_url}")

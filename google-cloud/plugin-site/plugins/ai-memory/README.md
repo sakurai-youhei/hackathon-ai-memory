@@ -8,7 +8,7 @@ Agent Builder MCP server for shared hackathon memory (store and recall).
 Follow the distribution site (marketplace + setup guide):
 
 ```text
-https://storage.googleapis.com/hackathon-ai-memory-plugin
+https://storage.googleapis.com/hackathon-ai-memory-plugin/index.html
 ```
 
 ## Contents
@@ -31,7 +31,8 @@ make render-plugin
 ```
 
 This writes `.mcp.json`, `gemini-extension.json`, marketplace manifests,
-`index.html`, and `plugins/ai-memory.zip` using `PLUGIN_PUBLIC_URL`.
+`index.html`, and both versioned and compatibility plugin archives using
+`PLUGIN_PUBLIC_URL`.
 
 To increment the patch version, render the artifacts, and upload them:
 

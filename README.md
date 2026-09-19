@@ -47,7 +47,8 @@ AIメモリーいらんかえ～ @ 【大阪】Zenn Agentic AI ミニハッカ�
 
 ## セットアップ方法
 
-hackathon-ai-memory-pluginの[プラグイン配布サイト](https://storage.googleapis.com/hackathon-ai-memory-plugin)を参照してください。
+Claude Code・Cursor・Gemini CLI へのインストール手順は、
+[プラグイン配布サイトのセットアップガイド](https://storage.googleapis.com/hackathon-ai-memory-plugin/index.html)を参照してください。
 
 ## 利用者向け API キーの発行
 

@@ -3,70 +3,206 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AIメモリーいらんかえ～ セットアップガイド</title>
+  <title>AI Memory plugin setup</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: system-ui, sans-serif;
+      line-height: 1.6;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 58rem;
+      padding: 1.5rem;
+    }
+    header {
+      align-items: center;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    nav {
+      display: flex;
+      gap: .5rem;
+    }
+    button {
+      cursor: pointer;
+      padding: .4rem .75rem;
+    }
+    button[aria-pressed="true"] {
+      font-weight: 700;
+      outline: 2px solid currentColor;
+    }
+    .agent {
+      border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+      border-radius: .6rem;
+      margin: 1rem 0;
+      padding: 0 1rem 1rem;
+    }
+    pre {
+      background: color-mix(in srgb, currentColor 8%, transparent);
+      border-radius: .4rem;
+      overflow-x: auto;
+      padding: 1rem;
+    }
+    code {
+      overflow-wrap: anywhere;
+    }
+    .caution {
+      border-inline-start: .3rem solid #d97706;
+      padding-inline-start: 1rem;
+    }
+    [data-locale][hidden] {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <h1>AIメモリーいらんかえ～</h1>
-  <p>エージェントプラグインの簡単セットアップガイドです。</p>
-  <p>配布サイト: <code>{{ plugin_public_url }}</code></p>
+  <header>
+    <h1>AIメモリーいらんかえ～</h1>
+    <nav aria-label="Language / 言語">
+      <button type="button" data-set-locale="ja">日本語</button>
+      <button type="button" data-set-locale="en">English</button>
+    </nav>
+  </header>
 
-  <h2>1. プラグインを入れる</h2>
+  <main data-locale="ja">
+    <p>共有メモリーを検索・保存するエージェントプラグインのセットアップガイドです。</p>
 
-  <h3>Claude Code</h3>
-  <pre>/plugin marketplace add {{ plugin_public_url }}/marketplace.json
-/plugin install ai-memory@hackathon-ai-memory</pre>
+    <h2>はじめる前に</h2>
+    <p>発行された <code>AI_MEMORY_API_KEY</code> を用意し、利用するエージェントを選んでください。インストール時または初回読み込み時に入力します。</p>
 
-  <h3>Cursor</h3>
-  <p>Cursor のチーム向けマーケットプレースは現状 Git リポジトリ前提のため、この配布サイトの zip を手元に入れて使います。</p>
-  <pre>curl -fsSL "{{ plugin_public_url }}/plugins/ai-memory.zip" -o ai-memory.zip
+    <section class="agent">
+      <h2>Claude Code</h2>
+      <p>Claude Code を起動し、チャット欄で次の3つを順に実行します。</p>
+      <pre><code>/plugin marketplace add {{ marketplace_url }}
+/plugin install ai-memory@hackathon-ai-memory
+/plugin configure ai-memory@hackathon-ai-memory</code></pre>
+      <p>設定画面で API キーを入力し、Claude Code を再起動してください。</p>
+    </section>
+
+    <section class="agent">
+      <h2>Cursor</h2>
+      <p>ターミナルで次を実行し、Cursor の <strong>Developer: Reload Window</strong> を実行します。</p>
+      <pre><code>curl -fsSL "{{ plugin_archive_url }}" -o ai-memory.zip
 mkdir -p ~/.cursor/plugins/local
-unzip -o ai-memory.zip -d ~/.cursor/plugins/local</pre>
-  <p>その後、Cursor をリロード（メニューの Developer: Reload Window）してください。</p>
-  <p>マーケットプレース定義ファイル（チーム向けマーケットプレースやローカル clone 用）:
-    <a href="{{ plugin_public_url }}/.cursor-plugin/marketplace.json"><code>.cursor-plugin/marketplace.json</code></a>
-  </p>
+unzip -o ai-memory.zip -d ~/.cursor/plugins/local
+rm ai-memory.zip</code></pre>
+      <p>プラグイン設定の <code>AI_MEMORY_API_KEY</code> に API キーを設定してください。</p>
+    </section>
 
-  <h3>Gemini CLI</h3>
-  <pre>curl -fsSL "{{ plugin_public_url }}/plugins/ai-memory.zip" -o ai-memory.zip
-unzip -o ai-memory.zip -d /tmp
-gemini extensions install /tmp/ai-memory</pre>
+    <section class="agent">
+      <h2>Gemini CLI</h2>
+      <p>ターミナルで次を実行します。インストール中に API キーを入力してください。</p>
+      <pre><code>tmp_dir="$(mktemp -d)"
+curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
+unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
+gemini extensions install "$tmp_dir/ai-memory"</code></pre>
+    </section>
 
-  <h2>2. API キーを設定する</h2>
-  <p>発行された API キーを環境変数・設定項目 <code>AI_MEMORY_API_KEY</code> として設定します。</p>
-  <ul>
-    <li>Claude Code: プラグインのユーザー設定</li>
-    <li>Cursor: プラグイン設定（variables）</li>
-    <li>Gemini CLI: 拡張機能の設定（インストール時の入力）</li>
-  </ul>
+    <h2>使ってみる</h2>
+    <ul>
+      <li>「〇〇を覚えて」— 記憶として保存します</li>
+      <li>「〇〇って何だっけ？」— 記憶を検索して答えます</li>
+    </ul>
 
-  <h2>3. 推奨スキル（elasticsearch-esql）</h2>
-  <p>
-    このプラグインを使うときは、
-    <a href="https://github.com/elastic/agent-skills">elastic/agent-skills</a>
-    の <strong>elasticsearch-esql</strong> スキルも入れておくことを推奨します。
-    ES|QL での検索や集計がしやすくなります。
-  </p>
-  <pre>npx skills add elastic/agent-skills --skill elasticsearch-esql</pre>
-  <p>Claude Code では、次のようにマーケットプレースを追加してから Elasticsearch 用プラグインを入れる方法でも構いません（<code>elasticsearch-esql</code> を含みます）:</p>
-  <pre>claude plugin marketplace add https://github.com/elastic/agent-skills
-claude plugin install elastic-elasticsearch@elastic-agent-skills</pre>
+    <h2>推奨スキル</h2>
+    <p>ES|QL で検索・集計する場合は、<a href="https://github.com/elastic/agent-skills">elastic/agent-skills</a> の <strong>elasticsearch-esql</strong> も推奨します。</p>
+    <pre><code>npx skills add elastic/agent-skills --skill elasticsearch-esql</code></pre>
 
-  <h2>4. 使ってみる</h2>
-  <p>エージェントに、ふつうの日本語で話しかけてください。</p>
-  <ul>
-    <li>「〇〇を覚えて」→ 記憶として保存します</li>
-    <li>「〇〇って何だっけ？」→ 記憶を検索して答えます</li>
-  </ul>
+    <h2>配布ファイル</h2>
+    <ul>
+      <li><a href="{{ marketplace_url }}">Claude Code marketplace.json</a></li>
+      <li><a href="{{ plugin_public_url }}/.cursor-plugin/marketplace.json">Cursor marketplace.json</a></li>
+      <li><a href="{{ plugin_archive_url }}">プラグイン本体（zip）</a></li>
+    </ul>
 
-  <h2>配布ファイル</h2>
-  <ul>
-    <li><a href="{{ plugin_public_url }}/marketplace.json">Claude 用 marketplace.json</a></li>
-    <li><a href="{{ plugin_public_url }}/.claude-plugin/marketplace.json">.claude-plugin/marketplace.json</a></li>
-    <li><a href="{{ plugin_public_url }}/.cursor-plugin/marketplace.json">.cursor-plugin/marketplace.json</a></li>
-    <li><a href="{{ plugin_public_url }}/plugins/ai-memory.zip">plugins/ai-memory.zip（プラグイン本体）</a></li>
-  </ul>
+    <p class="caution"><strong>注意:</strong> ハッカソン向けの最低限のセキュリティです。個人情報や機密情報は絶対に登録しないでください。</p>
+  </main>
 
-  <h2>注意</h2>
-  <p>ハッカソン向けの最低限のセキュリティです。個人情報や機密情報は絶対に登録しないでください。</p>
+  <main data-locale="en" lang="en" hidden>
+    <p>Set up the agent plugin that searches and stores shared memories.</p>
+
+    <h2>Before you begin</h2>
+    <p>Have your issued <code>AI_MEMORY_API_KEY</code> ready, then choose your agent below. You will enter the key during installation or initial loading.</p>
+
+    <section class="agent">
+      <h2>Claude Code</h2>
+      <p>Start Claude Code and run these three commands in the chat, in order.</p>
+      <pre><code>/plugin marketplace add {{ marketplace_url }}
+/plugin install ai-memory@hackathon-ai-memory
+/plugin configure ai-memory@hackathon-ai-memory</code></pre>
+      <p>Enter the API key on the configuration screen, then restart Claude Code.</p>
+    </section>
+
+    <section class="agent">
+      <h2>Cursor</h2>
+      <p>Run these commands in a terminal, then select <strong>Developer: Reload Window</strong> in Cursor.</p>
+      <pre><code>curl -fsSL "{{ plugin_archive_url }}" -o ai-memory.zip
+mkdir -p ~/.cursor/plugins/local
+unzip -o ai-memory.zip -d ~/.cursor/plugins/local
+rm ai-memory.zip</code></pre>
+      <p>Set the API key as <code>AI_MEMORY_API_KEY</code> in the plugin settings.</p>
+    </section>
+
+    <section class="agent">
+      <h2>Gemini CLI</h2>
+      <p>Run these commands in a terminal. Enter the API key during installation.</p>
+      <pre><code>tmp_dir="$(mktemp -d)"
+curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
+unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
+gemini extensions install "$tmp_dir/ai-memory"</code></pre>
+    </section>
+
+    <h2>Try it</h2>
+    <ul>
+      <li>“Remember ...” — stores a memory</li>
+      <li>“What was ... again?” — searches memories and answers</li>
+    </ul>
+
+    <h2>Recommended skill</h2>
+    <p>For ES|QL search and aggregation, we also recommend <strong>elasticsearch-esql</strong> from <a href="https://github.com/elastic/agent-skills">elastic/agent-skills</a>.</p>
+    <pre><code>npx skills add elastic/agent-skills --skill elasticsearch-esql</code></pre>
+
+    <h2>Downloads</h2>
+    <ul>
+      <li><a href="{{ marketplace_url }}">Claude Code marketplace.json</a></li>
+      <li><a href="{{ plugin_public_url }}/.cursor-plugin/marketplace.json">Cursor marketplace.json</a></li>
+      <li><a href="{{ plugin_archive_url }}">Plugin archive (zip)</a></li>
+    </ul>
+
+    <p class="caution"><strong>Caution:</strong> This hackathon service has minimal security controls. Never store personal or confidential information.</p>
+  </main>
+
+  <script>
+    const supportedLocales = new Set(["ja", "en"]);
+    const savedLocale = localStorage.getItem("ai-memory-locale");
+    const browserLocale = (navigator.languages?.[0] || navigator.language || "en")
+      .toLowerCase()
+      .split("-")[0];
+
+    function setLocale(locale, persist = false) {
+      const selectedLocale = supportedLocales.has(locale) ? locale : "en";
+      document.documentElement.lang = selectedLocale;
+      document.title = selectedLocale === "ja"
+        ? "AIメモリーいらんかえ～ セットアップガイド"
+        : "AI Memory plugin setup guide";
+      document.querySelectorAll("[data-locale]").forEach((element) => {
+        element.hidden = element.dataset.locale !== selectedLocale;
+      });
+      document.querySelectorAll("[data-set-locale]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.setLocale === selectedLocale));
+      });
+      if (persist) {
+        localStorage.setItem("ai-memory-locale", selectedLocale);
+      }
+    }
+
+    document.querySelectorAll("[data-set-locale]").forEach((button) => {
+      button.addEventListener("click", () => setLocale(button.dataset.setLocale, true));
+    });
+    setLocale(savedLocale || browserLocale);
+  </script>
 </body>
 </html>

@@ -13,6 +13,13 @@ if [[ ! -f "${PLUGIN_SITE_DIR}/marketplace.json" || ! -f "${PLUGIN_SITE_DIR}/plu
 	exit 1
 fi
 
+PLUGIN_VERSION="$(<"${PLUGIN_SITE_DIR}/plugins/ai-memory/VERSION")"
+VERSIONED_PLUGIN_ARCHIVE="${PLUGIN_SITE_DIR}/plugins/ai-memory-${PLUGIN_VERSION}.zip"
+if [[ ! -f "${VERSIONED_PLUGIN_ARCHIVE}" ]]; then
+	echo "Missing versioned plugin archive: ${VERSIONED_PLUGIN_ARCHIVE}" >&2
+	exit 1
+fi
+
 if gcloud storage buckets describe "gs://${PLUGIN_BUCKET}" \
 	--project="${GCP_PROJECT_ID}" >/dev/null 2>&1; then
 	echo "Bucket gs://${PLUGIN_BUCKET} already exists; skipping create."
@@ -33,5 +40,13 @@ gcloud storage buckets add-iam-policy-binding "gs://${PLUGIN_BUCKET}" \
 
 gcloud storage rsync "${PLUGIN_SITE_DIR}" "gs://${PLUGIN_BUCKET}" \
 	--recursive
+
+gcloud storage objects update \
+	"gs://${PLUGIN_BUCKET}/index.html" \
+	"gs://${PLUGIN_BUCKET}/marketplace.json" \
+	"gs://${PLUGIN_BUCKET}/.claude-plugin/marketplace.json" \
+	"gs://${PLUGIN_BUCKET}/.cursor-plugin/marketplace.json" \
+	"gs://${PLUGIN_BUCKET}/plugins/ai-memory.zip" \
+	--cache-control="no-cache, max-age=0"
 
 echo "Plugin distribution URL: ${PLUGIN_PUBLIC_URL}/index.html"
