@@ -196,13 +196,25 @@
         "metadata": {
           "type": "flattened",
           "ignore_above": 1024
+        },
+        "semantic_e5": {
+          "type": "semantic_text",
+          "inference_id": "ai-memory-e5"
+        },
+        "semantic_jina_v3": {
+          "type": "semantic_text",
+          "inference_id": ".jina-embeddings-v3"
+        },
+        "semantic_jina_v5s": {
+          "type": "semantic_text",
+          "inference_id": ".jina-embeddings-v5-text-small"
         }
       }
     }
   },
-  "version": 1,
+  "version": 2,
   "_meta": {
-    "description": "Core ai-memory document schema. Semantic fields live in ai-memory@semantic-* component templates so composed_of can be trimmed when endpoints are unavailable.",
+    "description": "Core ai-memory document schema. Semantic fields are defined here (for copy_to resolution) and augmented with chunking_settings by ai-memory@semantic-* component templates.",
     "managed_by": "hackathon-ai-memory"
   }
 }

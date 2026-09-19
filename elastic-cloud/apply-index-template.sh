@@ -16,16 +16,22 @@ trap 'rm -rf "${WORK_DIR}"' EXIT
 request() {
 	local method="$1" path="$2" output="$3"
 	shift 3
-	curl -fsS \
-		--retry 3 \
-		--retry-all-errors \
+	local status
+	status="$(curl -sS \
 		--connect-timeout 15 \
 		--max-time 60 \
 		-X "${method}" \
 		-H "Authorization: ApiKey ${ES_API_KEY}" \
 		"$@" \
 		-o "${output}" \
-		"${ES_ENDPOINT}${path}"
+		-w '%{http_code}' \
+		"${ES_ENDPOINT}${path}")"
+	if [[ "${status}" != 2* ]]; then
+		echo "  ERROR: ${method} ${path} returned HTTP ${status}" >&2
+		cat "${output}" >&2
+		echo >&2
+		exit 1
+	fi
 }
 
 put_component() {
@@ -47,6 +53,7 @@ echo "Applying index template ${TEMPLATE_ID}..."
 request PUT "/_index_template/${TEMPLATE_ID}" "${WORK_DIR}/index-template.json" \
 	-H 'Content-Type: application/json' \
 	--data-binary "@${SCRIPT_DIR}/index-template.json"
+echo "  ${TEMPLATE_ID} applied."
 
 echo "Verifying index template ${TEMPLATE_ID}..."
 request POST "/_index_template/_simulate_index/00000000-0000-0000-0000-000000000000-ai-memory" \
