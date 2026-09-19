@@ -1,9 +1,16 @@
 {
-  "cluster": [],
+  "cluster": ["monitor_inference"],
   "indices": [
     {
       "names": ["{{ owner_uuid }}-ai-memory"],
       "privileges": ["read", "index", "view_index_metadata", "auto_configure"]
+    }
+  ],
+  "applications": [
+    {
+      "application": "kibana-.kibana",
+      "privileges": ["feature_agentBuilder.read", "feature_actions.read"],
+      "resources": ["space:default"]
     }
   ]
 }
