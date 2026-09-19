@@ -22,6 +22,7 @@ bump-plugin-version: $(VENV_PYTHON)
 	@$(MAKE) upload-plugin
 
 render-plugin: $(VENV_PYTHON)
+	@test -n "$(ES_ENDPOINT)" || (echo "ES_ENDPOINT is required in .env" >&2; exit 1)
 	@test -n "$(KB_ENDPOINT)" || (echo "KB_ENDPOINT is required in .env" >&2; exit 1)
 	@test -n "$(PLUGIN_PUBLIC_URL)" || (echo "PLUGIN_PUBLIC_URL is required" >&2; exit 1)
 	@$(VENV_PYTHON) -c "import jinja2" 2>/dev/null || $(VENV_PYTHON) -m pip install jinja2

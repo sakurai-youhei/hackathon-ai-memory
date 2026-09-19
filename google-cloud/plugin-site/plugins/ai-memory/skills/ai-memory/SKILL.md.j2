@@ -1,0 +1,77 @@
+---
+name: ai-memory
+description: >-
+  Store and retrieve shared hackathon knowledge through Elasticsearch and the
+  ai-memory Kibana MCP server. Use when the user asks to memorize, remember,
+  recall, search notes, or otherwise persist/look up project context in
+  Japanese or English.
+---
+
+# AI Memory
+
+Store shared knowledge directly in Elasticsearch and retrieve it with the
+`ai-memory` MCP tools.
+
+## When to use
+
+- The user asks to remember, memorize, or save information
+- The user asks to recall, remember, or search what was stored earlier
+- The user refers to shared notes, context, or project memory
+
+## Connection details
+
+- Elasticsearch endpoint: `{{ es_endpoint }}`
+- Memory index: `{{ memory_index }}`
+- Authentication: `Authorization: ApiKey $AI_MEMORY_API_KEY`
+
+The API key is supplied by the plugin as `AI_MEMORY_API_KEY`. Never print,
+store, or include its value in a response.
+
+## Store a memory
+
+Create a concise, searchable summary containing only facts the user supplied,
+JSON-encode it, and index it in the `content` field. For example:
+
+```bash
+curl --fail-with-body --silent --show-error \
+  --request POST \
+  "{{ es_endpoint }}/{{ memory_index }}/_doc" \
+  --header "Authorization: ApiKey ${AI_MEMORY_API_KEY}" \
+  --header "Content-Type: application/json" \
+  --data '{"content":"The searchable memory to store"}'
+```
+
+Use a JSON encoder when the content contains quotes, newlines, or other special
+characters. Report success only after Elasticsearch returns a successful HTTP
+response. If indexing fails, report the failure without exposing credentials.
+
+## Retrieve memories
+
+Search with the `ai-memory` MCP tools first, then answer from the returned
+results. Say clearly when nothing relevant was found. Prefer
+`elasticsearch-esql` when structured ES|QL search or aggregation is a better
+fit.
+
+## Recommended companion skill
+
+Installing **elasticsearch-esql** from
+[elastic/agent-skills](https://github.com/elastic/agent-skills) is recommended.
+
+```bash
+npx skills add elastic/agent-skills --skill elasticsearch-esql
+```
+
+## Instructions
+
+1. Store memories through the Elasticsearch indexing API described above.
+2. Retrieve memories through the `ai-memory` MCP tools or ES|QL.
+3. Do not invent facts that the user did not provide.
+4. Respond in Japanese when the user writes in Japanese, and in English when
+   they write in English.
+5. Never store personal data, secrets, credentials, or other sensitive content.
+   If the user asks to store such content, refuse and explain briefly.
+
+## Safety
+
+This service is for a hackathon and has minimal security controls. Do not upload
+or retain personally identifiable or confidential information.

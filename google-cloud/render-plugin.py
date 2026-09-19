@@ -14,12 +14,14 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 SITE_DIR = Path(__file__).resolve().parent / "plugin-site"
 PLUGIN_DIR = SITE_DIR / "plugins" / "ai-memory"
 VERSION_FILE = PLUGIN_DIR / "VERSION"
+MEMORY_INDEX = "c68a3344-6870-433f-9834-5bc11694307a-ai-memory"
 SEMVER_PATTERN = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PLUGIN_TEMPLATES = (
     (".mcp.json.j2", ".mcp.json"),
     (".claude-plugin/plugin.json.j2", ".claude-plugin/plugin.json"),
     (".cursor-plugin/plugin.json.j2", ".cursor-plugin/plugin.json"),
     ("gemini-extension.json.j2", "gemini-extension.json"),
+    ("skills/ai-memory/SKILL.md.j2", "skills/ai-memory/SKILL.md"),
 )
 SITE_TEMPLATES = (
     ("marketplace.json.j2", "marketplace.json"),
@@ -81,13 +83,16 @@ def _build_zip(plugin_dir: Path, zip_path: Path) -> None:
 
 
 def main() -> int:
+    es_endpoint = _require_env("ES_ENDPOINT").rstrip("/")
     kb_endpoint = _require_env("KB_ENDPOINT")
     plugin_public_url = _require_env("PLUGIN_PUBLIC_URL").rstrip("/")
     plugin_version = _read_plugin_version()
 
     kibana_mcp_url = f"{kb_endpoint.rstrip('/')}/api/agent_builder/mcp"
     context = {
+        "es_endpoint": es_endpoint,
         "kibana_mcp_url": kibana_mcp_url,
+        "memory_index": MEMORY_INDEX,
         "plugin_public_url": plugin_public_url,
         "plugin_version": plugin_version,
     }
@@ -113,6 +118,7 @@ def main() -> int:
     _build_zip(PLUGIN_DIR, SITE_DIR / "plugins" / "ai-memory.zip")
 
     print(f"Kibana MCP URL: {kibana_mcp_url}")
+    print(f"Elasticsearch URL: {es_endpoint}")
     print(f"Plugin public URL: {plugin_public_url}")
     print(f"Plugin version: {plugin_version}")
     return 0

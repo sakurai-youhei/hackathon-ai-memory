@@ -19,11 +19,12 @@ https://storage.googleapis.com/hackathon-ai-memory-plugin
 - `.claude-plugin/plugin.json.j2` — Claude Code manifest template (`userConfig.AI_MEMORY_API_KEY`)
 - `VERSION` — shared semantic version for all plugin manifests
 - `GEMINI.md` — Gemini CLI extension context
-- `skills/ai-memory/` — guidance for remembering and recalling via MCP
+- `skills/ai-memory/SKILL.md.j2` — skill template with the Elasticsearch endpoint
+  and indexing instructions
 
 ## Build
 
-From the repository root (requires `KB_ENDPOINT` in `.env`):
+From the repository root (requires `ES_ENDPOINT` and `KB_ENDPOINT` in `.env`):
 
 ```bash
 make render-plugin
