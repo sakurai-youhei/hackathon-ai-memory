@@ -8,7 +8,11 @@ import sys
 from pathlib import Path
 
 DEFAULT_VERSION_FILE = (
-    Path(__file__).resolve().parent / "plugin-site" / "plugins" / "ai-memory" / "VERSION"
+    Path(__file__).resolve().parent
+    / "plugin-site"
+    / "plugins"
+    / "ai-memory"
+    / "VERSION"
 )
 SEMVER_PATTERN = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 

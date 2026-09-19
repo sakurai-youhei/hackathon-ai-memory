@@ -56,7 +56,9 @@ def _read_plugin_version() -> str:
     return version
 
 
-def _render(env: Environment, template_name: str, output_path: Path, context: dict) -> None:
+def _render(
+    env: Environment, template_name: str, output_path: Path, context: dict
+) -> None:
     rendered = env.get_template(template_name).render(**context)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(rendered, encoding="utf-8")
@@ -96,9 +98,7 @@ def main() -> int:
         "memory_index": MEMORY_INDEX,
         "plugin_public_url": plugin_public_url,
         "plugin_archive_url": f"{plugin_public_url}/plugins/{plugin_archive_name}",
-        "marketplace_url": (
-            f"{plugin_public_url}/marketplace.json?v={plugin_version}"
-        ),
+        "marketplace_url": (f"{plugin_public_url}/marketplace.json?v={plugin_version}"),
         "plugin_version": plugin_version,
     }
 

@@ -43,7 +43,6 @@ put_component() {
 }
 
 echo "Applying component templates..."
-put_component "ai-memory@settings" "${TEMPLATES_DIR}/ai-memory@settings.json"
 put_component "ai-memory@mappings" "${TEMPLATES_DIR}/ai-memory@mappings.json"
 put_component "ai-memory@semantic-e5" "${TEMPLATES_DIR}/ai-memory@semantic-e5.json"
 put_component "ai-memory@semantic-jina-v3" "${TEMPLATES_DIR}/ai-memory@semantic-jina-v3.json"
