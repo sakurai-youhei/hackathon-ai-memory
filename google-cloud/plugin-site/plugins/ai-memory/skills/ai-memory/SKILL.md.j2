@@ -37,7 +37,7 @@ configuration values are intentionally not exported to Bash commands, while
 the writer tool receives the API key through its private MCP environment.
 
 For clients that do not expose the writer tool, index the summary in the
-`content` field with the following fallback only when `AI_MEMORY_API_KEY` is
+`text` field with the following fallback only when `AI_MEMORY_API_KEY` is
 already present in the shell environment:
 
 ```bash
@@ -46,7 +46,7 @@ curl --fail-with-body --silent --show-error \
   "{{ es_endpoint }}/{{ memory_index }}/_doc" \
   --header "Authorization: ApiKey ${AI_MEMORY_API_KEY}" \
   --header "Content-Type: application/json" \
-  --data '{"content":"The searchable memory to store"}'
+  --data '{"text":"The searchable memory to store"}'
 ```
 
 Use a JSON encoder when the content contains quotes, newlines, or other special

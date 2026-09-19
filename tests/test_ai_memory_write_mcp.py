@@ -61,7 +61,7 @@ class AiMemoryWriteMcpTest(unittest.TestCase):
             api_request.full_url, "https://example.test/owner-ai-memory/_doc"
         )
         self.assertEqual(api_request.get_header("Authorization"), "ApiKey secret-key")
-        self.assertEqual(json.loads(api_request.data), {"content": "Remember this"})
+        self.assertEqual(json.loads(api_request.data), {"text": "Remember this"})
         self.assertEqual(result["id"], "memory-1")
 
     def test_tool_error_does_not_expose_missing_secret(self) -> None:

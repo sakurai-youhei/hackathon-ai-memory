@@ -28,7 +28,7 @@ def store_memory(content: str) -> dict[str, Any]:
     endpoint = _required_env("AI_MEMORY_ES_ENDPOINT").rstrip("/")
     index = _required_env("AI_MEMORY_INDEX")
     api_key = _required_env("AI_MEMORY_API_KEY")
-    body = json.dumps({"content": content.strip()}, ensure_ascii=False).encode()
+    body = json.dumps({"text": content.strip()}, ensure_ascii=False).encode()
     api_request = request.Request(
         f"{endpoint}/{index}/_doc",
         data=body,
