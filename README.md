@@ -44,7 +44,7 @@ AIメモリーいらんかえ～ @ 【大阪】Zenn Agentic AI ミニハッカ�
 
 </details>
 
-## セットアップ
+## セットアップ方法
 
 hackathon-ai-memory-pluginの[プラグイン配布サイト](https://storage.googleapis.com/hackathon-ai-memory-plugin)を参照してください。
 
