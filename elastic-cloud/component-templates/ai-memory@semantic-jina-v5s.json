@@ -1,0 +1,22 @@
+{
+  "template": {
+    "mappings": {
+      "properties": {
+        "semantic_jina_v5s": {
+          "type": "semantic_text",
+          "inference_id": ".jina-embeddings-v5-text-small",
+          "chunking_settings": {
+            "strategy": "none"
+          }
+        }
+      }
+    }
+  },
+  "version": 1,
+  "_meta": {
+    "description": "semantic_text slot backed by Jina Embeddings v5 Text Small EIS (1024 dims). Document-level single vector for gist retrieval.",
+    "inference_id": ".jina-embeddings-v5-text-small",
+    "dimensions": 1024,
+    "managed_by": "hackathon-ai-memory"
+  }
+}

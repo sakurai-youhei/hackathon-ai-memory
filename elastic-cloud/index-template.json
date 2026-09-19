@@ -8,14 +8,14 @@
     "ai-memory@settings",
     "ai-memory@mappings",
     "ai-memory@semantic-e5",
-    "ai-memory@semantic-bge-m3",
-    "ai-memory@semantic-qwen3",
+    "ai-memory@semantic-jina-v3",
+    "ai-memory@semantic-jina-v5s",
     "ai-memory@custom"
   ],
   "ignore_missing_component_templates": [
     "ai-memory@semantic-e5",
-    "ai-memory@semantic-bge-m3",
-    "ai-memory@semantic-qwen3",
+    "ai-memory@semantic-jina-v3",
+    "ai-memory@semantic-jina-v5s",
     "ai-memory@custom"
   ],
   "allow_auto_create": true,

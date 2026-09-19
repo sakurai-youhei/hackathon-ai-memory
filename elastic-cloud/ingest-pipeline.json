@@ -1,6 +1,6 @@
 {
-  "description": "ai-memory normalization pipeline. Embedding is handled by semantic_text + copy_to, so this pipeline only normalizes: timestamps, owner, OCR payload shape, whitespace, and language detection.",
-  "version": 1,
+  "description": "Normalize ai-memory documents and generate multilingual E5 embeddings for Japanese and English text.",
+  "version": 2,
   "_meta": {
     "project": "hackathon-ai-memory",
     "managed_by": "hackathon-ai-memory"
@@ -233,6 +233,20 @@
         "description": "A memory with neither text nor a photo attachment is unsearchable. Tombstone it via on_failure.",
         "if": "(ctx.text == null || ctx.text.trim().isEmpty()) && ctx?.attachment?.gcs_uri == null",
         "message": "ai-memory: a document must carry non-empty 'text' (or 'ocr.text') or an 'attachment.gcs_uri'"
+      }
+    },
+    {
+      "inference": {
+        "tag": "embed-text-with-multilingual-e5",
+        "description": "Generate a 1024-dimensional embedding with the uploaded multilingual-e5-large model.",
+        "if": "ctx.text instanceof String && !ctx.text.trim().isEmpty()",
+        "model_id": "multilingual-e5-large",
+        "input_output": [
+          {
+            "input_field": "text",
+            "output_field": "embedding.e5"
+          }
+        ]
       }
     },
     {

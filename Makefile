@@ -8,14 +8,11 @@ KIBANA_API_KEY_CREATE_URL := $(patsubst %/,%,$(KB_ENDPOINT))/app/management/secu
 VENV_PYTHON := .venv/bin/python
 VENV_PYTHON_VERSION ?= 3.14
 
-# Which embedding models to enable. Space-separated: e5 bge_m3 qwen3
-# Default to e5 only (works immediately; BGE-M3/Qwen3 need TEI on Cloud Run).
-AI_MEMORY_MODELS ?= e5
-# Cloud Run region for TEI services (co-located with Elasticsearch in asia-northeast1).
-TEI_REGION ?= asia-northeast1
-TEI_IMAGE ?= ghcr.io/huggingface/text-embeddings-inference:cpu-1.9
+# Which embedding models to enable. Space-separated: e5 jina_v3 jina_v5s
+# All models are in-cluster (elasticsearch service or Elastic Inference Service) — no Cloud Run required.
+AI_MEMORY_MODELS ?= e5 jina_v3 jina_v5s
 
-.PHONY: create-venv upload-plugin render-plugin bump-plugin-version issue-api-key setup-elasticsearch deploy-tei
+.PHONY: create-venv upload-plugin render-plugin bump-plugin-version issue-api-key setup-elasticsearch apply-ingest-pipeline
 
 create-venv: $(VENV_PYTHON)
 
@@ -48,7 +45,7 @@ setup-elasticsearch: $(VENV_PYTHON)
 	@AI_MEMORY_MODELS="$(AI_MEMORY_MODELS)" VENV_PYTHON="$(VENV_PYTHON)" \
 		./elastic-cloud/setup-elasticsearch.sh
 
-deploy-tei:
-	@test -n "$(GCP_PROJECT_ID)" || (echo "GCP_PROJECT_ID is required in .env" >&2; exit 1)
-	@test -n "$(TEI_API_KEY)" || (echo "TEI_API_KEY is required in .env" >&2; exit 1)
-	@AI_MEMORY_MODELS="$(AI_MEMORY_MODELS)" TEI_REGION="$(TEI_REGION)" TEI_IMAGE="$(TEI_IMAGE)" ./google-cloud/deploy-tei.sh
+apply-ingest-pipeline:
+	@test -n "$${ES_ENDPOINT:-}" || (echo "ES_ENDPOINT is required in .env" >&2; exit 1)
+	@test -n "$${ES_API_KEY:-}" || (echo "ES_API_KEY is required in .env" >&2; exit 1)
+	@./elastic-cloud/apply-ingest-pipeline.sh

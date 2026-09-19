@@ -33,8 +33,8 @@
           "type": "text",
           "copy_to": [
             "semantic_e5",
-            "semantic_bge_m3",
-            "semantic_qwen3"
+            "semantic_jina_v3",
+            "semantic_jina_v5s"
           ],
           "fields": {
             "ja": {
@@ -52,8 +52,8 @@
           "type": "text",
           "copy_to": [
             "semantic_e5",
-            "semantic_bge_m3",
-            "semantic_qwen3"
+            "semantic_jina_v3",
+            "semantic_jina_v5s"
           ],
           "fields": {
             "ja": {

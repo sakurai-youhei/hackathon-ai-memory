@@ -2,9 +2,9 @@
   "template": {
     "mappings": {
       "properties": {
-        "semantic_bge_m3": {
+        "semantic_jina_v3": {
           "type": "semantic_text",
-          "inference_id": "ai-memory-bge-m3",
+          "inference_id": ".jina-embeddings-v3",
           "chunking_settings": {
             "strategy": "recursive",
             "max_chunk_size": 300,
@@ -16,11 +16,9 @@
   },
   "version": 1,
   "_meta": {
-    "description": "semantic_text slot backed by BGE-M3 (1024 dims, 8192-token window, external TEI). Markdown-section chunks for topic-level retrieval.",
-    "model": "BAAI/bge-m3",
-    "inference_id": "ai-memory-bge-m3",
+    "description": "semantic_text slot backed by Jina Embeddings v3 EIS (1024 dims). Markdown-section chunks for topic-level retrieval.",
+    "inference_id": ".jina-embeddings-v3",
     "dimensions": 1024,
-    "max_input_tokens": 8192,
     "managed_by": "hackathon-ai-memory"
   }
 }
