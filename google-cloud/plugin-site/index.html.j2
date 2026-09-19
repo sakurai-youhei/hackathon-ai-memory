@@ -74,27 +74,36 @@
     <h2>はじめる前に</h2>
     <p>発行された <code>AI_MEMORY_API_KEY</code> と、そのキーに対応する <code>AI_MEMORY_INDEX</code>（<code>&lt;uuid&gt;-ai-memory</code>）を用意し、利用するエージェントを選んでください。インストール時または初回読み込み時に入力します。</p>
 
+    <h2>エージェントに設定する項目</h2>
+    <dl>
+      <dt><code>AI_MEMORY_API_KEY</code></dt>
+      <dd>発行された API キーです。<code>ApiKey </code> は付けず、発行された値だけを入力します。</dd>
+      <dt><code>AI_MEMORY_INDEX</code></dt>
+      <dd>API キーと一緒に案内された、<code>&lt;uuid&gt;-ai-memory</code> 形式のインデックス名です。</dd>
+    </dl>
+    <p>どちらも必須です。API キーをチャットに貼り付けず、以下の各エージェントの設定機能か環境変数に入力してください。</p>
+
     <section class="agent">
       <h2>Claude Code</h2>
       <p>Claude Code を起動し、チャット欄で次の2つを順に実行します。</p>
       <pre><code>/plugin marketplace add {{ marketplace_url }}
 /plugin install ai-memory@hackathon-ai-memory</code></pre>
-      <p>プラグインを有効化すると表示される設定画面で API キーとインデックス名を入力し、Claude Code を再起動してください。</p>
+      <p>プラグインを有効化すると表示される設定画面で、<strong>AI Memory API key</strong> に <code>AI_MEMORY_API_KEY</code>、<strong>AI Memory index</strong> に <code>AI_MEMORY_INDEX</code> を入力します。保存後、Claude Code を再起動してください。</p>
     </section>
 
     <section class="agent">
       <h2>Cursor</h2>
-      <p>ターミナルで次を実行し、Cursor の <strong>Developer: Reload Window</strong> を実行します。</p>
+      <p>ターミナルで次を実行し、プラグインをインストールします。</p>
       <pre><code>curl -fsSL "{{ plugin_archive_url }}" -o ai-memory.zip
 mkdir -p ~/.cursor/plugins/local
 unzip -o ai-memory.zip -d ~/.cursor/plugins/local
 rm ai-memory.zip</code></pre>
-      <p>プラグイン設定の <code>AI_MEMORY_API_KEY</code> に API キー、<code>AI_MEMORY_INDEX</code> にインデックス名を設定してください。</p>
+      <p>Cursor の ai-memory プラグイン設定を開き、<code>AI_MEMORY_API_KEY</code> に API キー、<code>AI_MEMORY_INDEX</code> にインデックス名を入力して保存します。設定後に <strong>Developer: Reload Window</strong> を実行してください。</p>
     </section>
 
     <section class="agent">
       <h2>Gemini CLI</h2>
-      <p>ターミナルで次を実行します。インストール中に API キーとインデックス名を入力してください。</p>
+      <p>ターミナルで次を実行します。インストール中の <strong>AI Memory API key</strong> に <code>AI_MEMORY_API_KEY</code>、<strong>AI Memory index</strong> に <code>AI_MEMORY_INDEX</code> を入力してください。</p>
       <pre><code>tmp_dir="$(mktemp -d)"
 curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
@@ -109,7 +118,7 @@ curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
 agy plugin install "$tmp_dir/ai-memory"
 agy plugin list</code></pre>
-      <p>Antigravity CLI を起動するシェルで API キーを環境変数に設定します。次の方法ならキーは画面やシェル履歴に表示されません。</p>
+      <p>Antigravity CLI を起動するシェルで、<code>AI_MEMORY_API_KEY</code> と <code>AI_MEMORY_INDEX</code> を環境変数に設定します。次の方法なら API キーは画面やシェル履歴に表示されません。設定したのと同じシェルで <code>agy</code> を起動してください。</p>
       <pre><code>read -rsp "AI_MEMORY_API_KEY: " AI_MEMORY_API_KEY &amp;&amp; echo
 read -rp "AI_MEMORY_INDEX: " AI_MEMORY_INDEX
 export AI_MEMORY_API_KEY AI_MEMORY_INDEX
@@ -153,27 +162,36 @@ claude plugin update ai-memory@hackathon-ai-memory</code></pre>
     <h2>Before you begin</h2>
     <p>Have your issued <code>AI_MEMORY_API_KEY</code> and its corresponding <code>AI_MEMORY_INDEX</code> (<code>&lt;uuid&gt;-ai-memory</code>) ready, then choose your agent below. You will enter both during installation or initial loading.</p>
 
+    <h2>Required agent settings</h2>
+    <dl>
+      <dt><code>AI_MEMORY_API_KEY</code></dt>
+      <dd>The issued API key. Enter only the issued value; do not prepend <code>ApiKey </code>.</dd>
+      <dt><code>AI_MEMORY_INDEX</code></dt>
+      <dd>The index name supplied with the API key, in <code>&lt;uuid&gt;-ai-memory</code> format.</dd>
+    </dl>
+    <p>Both values are required. Never paste the API key into chat; enter it through the agent-specific settings or environment variables described below.</p>
+
     <section class="agent">
       <h2>Claude Code</h2>
       <p>Start Claude Code and run these two commands in the chat, in order.</p>
       <pre><code>/plugin marketplace add {{ marketplace_url }}
 /plugin install ai-memory@hackathon-ai-memory</code></pre>
-      <p>Enter the API key and index name when the configuration dialog appears as the plugin is enabled, then restart Claude Code.</p>
+      <p>When the configuration dialog appears, enter <code>AI_MEMORY_API_KEY</code> under <strong>AI Memory API key</strong> and <code>AI_MEMORY_INDEX</code> under <strong>AI Memory index</strong>. Save the settings, then restart Claude Code.</p>
     </section>
 
     <section class="agent">
       <h2>Cursor</h2>
-      <p>Run these commands in a terminal, then select <strong>Developer: Reload Window</strong> in Cursor.</p>
+      <p>Run these commands in a terminal to install the plugin.</p>
       <pre><code>curl -fsSL "{{ plugin_archive_url }}" -o ai-memory.zip
 mkdir -p ~/.cursor/plugins/local
 unzip -o ai-memory.zip -d ~/.cursor/plugins/local
 rm ai-memory.zip</code></pre>
-      <p>Set the API key as <code>AI_MEMORY_API_KEY</code> and the index name as <code>AI_MEMORY_INDEX</code> in the plugin settings.</p>
+      <p>Open the ai-memory plugin settings in Cursor. Enter the API key as <code>AI_MEMORY_API_KEY</code> and the index name as <code>AI_MEMORY_INDEX</code>, then save. Select <strong>Developer: Reload Window</strong> after configuring the plugin.</p>
     </section>
 
     <section class="agent">
       <h2>Gemini CLI</h2>
-      <p>Run these commands in a terminal. Enter the API key and index name during installation.</p>
+      <p>Run these commands in a terminal. During installation, enter <code>AI_MEMORY_API_KEY</code> for <strong>AI Memory API key</strong> and <code>AI_MEMORY_INDEX</code> for <strong>AI Memory index</strong>.</p>
       <pre><code>tmp_dir="$(mktemp -d)"
 curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
@@ -188,7 +206,7 @@ curl -fsSL "{{ plugin_archive_url }}" -o "$tmp_dir/ai-memory.zip"
 unzip -q "$tmp_dir/ai-memory.zip" -d "$tmp_dir"
 agy plugin install "$tmp_dir/ai-memory"
 agy plugin list</code></pre>
-      <p>Set the API key in the environment used to start Antigravity CLI. This method keeps the key out of the terminal display and shell history.</p>
+      <p>Set <code>AI_MEMORY_API_KEY</code> and <code>AI_MEMORY_INDEX</code> as environment variables in the shell used to start Antigravity CLI. This method keeps the API key out of the terminal display and shell history. Start <code>agy</code> from the same shell.</p>
       <pre><code>read -rsp "AI_MEMORY_API_KEY: " AI_MEMORY_API_KEY &amp;&amp; echo
 read -rp "AI_MEMORY_INDEX: " AI_MEMORY_INDEX
 export AI_MEMORY_API_KEY AI_MEMORY_INDEX
