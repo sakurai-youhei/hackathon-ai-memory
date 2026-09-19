@@ -39,7 +39,8 @@ gcloud storage buckets add-iam-policy-binding "gs://${PLUGIN_BUCKET}" \
 	--role=roles/storage.objectViewer
 
 gcloud storage rsync "${PLUGIN_SITE_DIR}" "gs://${PLUGIN_BUCKET}" \
-	--recursive
+	--recursive \
+	--checksums-only
 
 gcloud storage objects update \
 	"gs://${PLUGIN_BUCKET}/index.html" \

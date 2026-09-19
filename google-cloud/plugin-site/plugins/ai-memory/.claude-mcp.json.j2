@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ai-memory": {
+      "type": "http",
+      "url": "{{ kibana_mcp_url }}",
+      "headers": {
+        "Authorization": "ApiKey ${user_config.AI_MEMORY_API_KEY}"
+      }
+    }
+  }
+}

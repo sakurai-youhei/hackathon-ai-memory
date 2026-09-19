@@ -18,6 +18,7 @@ MEMORY_INDEX = "c68a3344-6870-433f-9834-5bc11694307a-ai-memory"
 SEMVER_PATTERN = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PLUGIN_TEMPLATES = (
     (".mcp.json.j2", ".mcp.json"),
+    (".claude-mcp.json.j2", ".claude-mcp.json"),
     (".claude-plugin/plugin.json.j2", ".claude-plugin/plugin.json"),
     (".cursor-plugin/plugin.json.j2", ".cursor-plugin/plugin.json"),
     ("gemini-extension.json.j2", "gemini-extension.json"),
