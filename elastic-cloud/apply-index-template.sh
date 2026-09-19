@@ -8,6 +8,7 @@ set -euo pipefail
 
 ES_ENDPOINT="${ES_ENDPOINT%/}"
 TEMPLATE_ID="${AI_MEMORY_INDEX_TEMPLATE_ID:-ai-memory}"
+E5_INFERENCE_ID="${E5_INFERENCE_ID:-.multilingual-e5-small-elasticsearch}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEMPLATES_DIR="${SCRIPT_DIR}/component-templates"
 WORK_DIR="$(mktemp -d)"
@@ -41,6 +42,15 @@ put_component() {
 		--data-binary "@${file}"
 	echo "  ${name} applied."
 }
+
+ensure_e5_inference_endpoint() {
+	request GET "/_inference/text_embedding/${E5_INFERENCE_ID}" \
+		"${WORK_DIR}/inference-endpoint.json"
+	echo "  ${E5_INFERENCE_ID} is available."
+}
+
+echo "Checking inference endpoints..."
+ensure_e5_inference_endpoint
 
 echo "Applying component templates..."
 put_component "ai-memory@mappings" "${TEMPLATES_DIR}/ai-memory@mappings.json"

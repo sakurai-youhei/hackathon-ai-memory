@@ -290,7 +290,7 @@
         },
         "semantic_e5": {
           "type": "semantic_text",
-          "inference_id": "ai-memory-e5"
+          "inference_id": ".multilingual-e5-small-elasticsearch"
         },
         "semantic_jina_v3": {
           "type": "semantic_text",

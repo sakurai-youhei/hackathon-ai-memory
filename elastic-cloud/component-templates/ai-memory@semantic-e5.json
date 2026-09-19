@@ -4,7 +4,7 @@
       "properties": {
         "semantic_e5": {
           "type": "semantic_text",
-          "inference_id": "ai-memory-e5",
+          "inference_id": ".multilingual-e5-small-elasticsearch",
           "chunking_settings": {
             "strategy": "sentence",
             "max_chunk_size": 250,
@@ -16,10 +16,10 @@
   },
   "version": 1,
   "_meta": {
-    "description": "semantic_text slot backed by multilingual-e5-large (1024 dims, 512-token window, in-cluster via elasticsearch service). Sentence-level chunks for pinpoint needle retrieval.",
-    "model": "multilingual-e5-large",
-    "inference_id": "ai-memory-e5",
-    "dimensions": 1024,
+    "description": "semantic_text slot backed by the preconfigured multilingual E5 endpoint. Sentence-level chunks for pinpoint needle retrieval.",
+    "model": "multilingual-e5-small",
+    "inference_id": ".multilingual-e5-small-elasticsearch",
+    "dimensions": 384,
     "max_input_tokens": 512,
     "managed_by": "hackathon-ai-memory"
   }

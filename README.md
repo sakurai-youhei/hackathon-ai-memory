@@ -17,12 +17,12 @@ AIメモリーいらんかえ～ @ 【大阪】Zenn Agentic AI ミニハッカ�
 
 ## 「AIメモリーいらんかえ～」が提供する機能
 
-- 写真アップロード用のURL (予定)
+- ~~写真アップロード用のURL (予定)~~
 - ~~写真ダウンロード用のURL (予定)~~
 - テキスト手入力用のURL (予定)
-- 写真に写るドキュメントの文字起こし (予定)
+- ~~写真に写るドキュメントの文字起こし (予定)~~
 - テキスト情報のアップロード (12:00予定)
-- 写真・テキストで入力された情報の蓄積 (12:00予定)
+- ~~写真・~~テキストで入力された情報の蓄積 (12:00予定)
 - 自然言語で蓄積情報を検索するためエージェントプラグイン (12:00予定)
 - エージェントプラグインをセットアップするための簡単ガイド
 
@@ -68,12 +68,8 @@ API キーを作成します。このキーには、対象インデックスの�
 ```mermaid
 flowchart LR
     subgraph google-cloud
-        cloud-run-upload["cloud-run (写真アップロードページ)"]
-        eventarc
-        cloud-run-process["cloud-run (画像プロセス)"]
+        cloud-run["テキスト入力WEBインターフェース"]
         secret-manager
-        vision-api["vision-api (OCR処理)"]
-        cloud-storage["cloud-storage (写真保管用)"]
         cloud-storage-plugin["cloud-storage (プラグイン配布用)"]
     end
     subgraph elastic-cloud
@@ -93,9 +89,6 @@ flowchart LR
     ai-agent -- テキスト情報のアップロード --> ingest-pipeline
     ai-agent --> cloud-storage-plugin
 
-    smart-phone --> cloud-run-upload
-    smart-phone --> cloud-storage --> eventarc　--> cloud-run-process
-    secret-manager --> cloud-run-process --> ingest-pipeline
-    vision-api <--> cloud-run-process
-
+    smart-phone --> cloud-run
+    secret-manager --> cloud-run --> ingest-pipeline
 ```
