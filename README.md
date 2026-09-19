@@ -62,6 +62,9 @@ make issue-api-key uuid=00000000-0000-4000-8000-000000000000
 `Control security privileges` の JSON を使って Serverless プロジェクトの
 API キーを作成します。このキーには、対象インデックスの操作権限に加えて、
 デフォルト Space の Kibana Agent Builder MCP サーバーへの接続権限が含まれます。
+対象インデックスを `PUT /<uuid>-ai-memory` で明示的に作成するための
+`create_index` 権限も含まれます。権限テンプレートを変更した場合、既存の API
+キーには反映されないため、新しいキーを発行してください。
 
 ## Architecture of AIメモリーいらんかえ～
 
