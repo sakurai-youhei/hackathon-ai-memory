@@ -1,8 +1,8 @@
 {
   "name": "ai-memory",
   "displayName": "AI\u30e1\u30e2\u30ea\u30fc\u3044\u3089\u3093\u304b\u3048\uff5e",
-  "description": "Remember and recall shared hackathon knowledge via Kibana Agent Builder MCP. Use when the user asks to memorize, remember, or search stored notes.",
-  "version": "0.1.32",
+  "description": "Remember and recall shared hackathon knowledge via Kibana Agent Builder MCP. Use by default for requests such as \u899a\u3048\u3066, \u601d\u3044\u51fa\u3057\u3066, remember, or recall, even when ai-memory is not named.",
+  "version": "0.1.33",
   "author": {
     "name": "sakurai-youhei"
   },

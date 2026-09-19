@@ -2,9 +2,10 @@
 name: ai-memory
 description: >-
   Store and retrieve shared hackathon knowledge through Elasticsearch and the
-  ai-memory Kibana MCP server. Use when the user asks to memorize, remember,
-  recall, search notes, or otherwise persist/look up project context in
-  Japanese or English.
+  ai-memory Kibana MCP server. Use by default when the user says 「覚えて」,
+  「覚えさせて」, 「思い出して」, or asks in Japanese or English to
+  remember, memorize, recall, or search stored knowledge, even when they do not
+  name ai-memory.
 ---
 
 # AI Memory
@@ -13,8 +14,13 @@ Store and retrieve shared knowledge with the `ai-memory` MCP tools.
 
 ## When to use
 
-- The user asks to remember, memorize, or save information
-- The user asks to recall, remember, or search what was stored earlier
+- Treat short memory requests such as 「覚えて」, 「覚えさせて」, 「思い出して」,
+  “remember this,” and “recall that” as requests to use ai-memory. The user does
+  not need to name ai-memory or ask for a tool explicitly.
+- Use ai-memory when the user asks to memorize or save information, unless they
+  clearly limit the request to the current conversation without persistence.
+- Use ai-memory first when the user asks to recall or search what was stored
+  earlier, including casual phrases such as 「何だっけ？」.
 - The user refers to shared notes, context, or project memory
 
 ## Connection details
