@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Apply the ai-memory index template idempotently and verify it resolves correctly.
+# Apply ai-memory component templates and index template idempotently,
+# then verify the resolved mapping via _simulate_index.
 set -euo pipefail
 
 : "${ES_ENDPOINT:?ES_ENDPOINT is required in .env}"
@@ -8,7 +9,7 @@ set -euo pipefail
 ES_ENDPOINT="${ES_ENDPOINT%/}"
 TEMPLATE_ID="${AI_MEMORY_INDEX_TEMPLATE_ID:-ai-memory}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE_FILE="${SCRIPT_DIR}/index-template.json"
+TEMPLATES_DIR="${SCRIPT_DIR}/component-templates"
 WORK_DIR="$(mktemp -d)"
 trap 'rm -rf "${WORK_DIR}"' EXIT
 
@@ -27,10 +28,25 @@ request() {
 		"${ES_ENDPOINT}${path}"
 }
 
+put_component() {
+	local name="$1" file="$2"
+	request PUT "/_component_template/${name}" "${WORK_DIR}/${name}.json" \
+		-H 'Content-Type: application/json' \
+		--data-binary "@${file}"
+	echo "  ${name} applied."
+}
+
+echo "Applying component templates..."
+put_component "ai-memory@settings" "${TEMPLATES_DIR}/ai-memory@settings.json"
+put_component "ai-memory@mappings" "${TEMPLATES_DIR}/ai-memory@mappings.json"
+put_component "ai-memory@semantic-e5" "${TEMPLATES_DIR}/ai-memory@semantic-e5.json"
+put_component "ai-memory@semantic-jina-v3" "${TEMPLATES_DIR}/ai-memory@semantic-jina-v3.json"
+put_component "ai-memory@semantic-jina-v5s" "${TEMPLATES_DIR}/ai-memory@semantic-jina-v5s.json"
+
 echo "Applying index template ${TEMPLATE_ID}..."
-request PUT "/_index_template/${TEMPLATE_ID}" "${WORK_DIR}/put.json" \
+request PUT "/_index_template/${TEMPLATE_ID}" "${WORK_DIR}/index-template.json" \
 	-H 'Content-Type: application/json' \
-	--data-binary "@${TEMPLATE_FILE}"
+	--data-binary "@${SCRIPT_DIR}/index-template.json"
 
 echo "Verifying index template ${TEMPLATE_ID}..."
 request POST "/_index_template/_simulate_index/00000000-0000-0000-0000-000000000000-ai-memory" \
