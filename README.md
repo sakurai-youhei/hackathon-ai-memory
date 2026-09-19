@@ -49,6 +49,18 @@ AIメモリーいらんかえ～ @ 【大阪】Zenn Agentic AI ミニハッカ�
 
 hackathon-ai-memory-pluginの[プラグイン配布サイト](https://storage.googleapis.com/hackathon-ai-memory-plugin)を参照してください。
 
+## 利用者向け API キーの発行
+
+`.env` の `KB_ENDPOINT` を設定し、次を実行します。
+
+```shell
+make issue-api-key uuid=00000000-0000-4000-8000-000000000000
+```
+
+標準出力に表示された URL をブラウザで開き、表示された `Name` と
+`Control security privileges` の JSON を使って Serverless プロジェクトの
+API キーを作成します。
+
 ## Architecture of AIメモリーいらんかえ～
 
 ```mermaid
