@@ -1,0 +1,29 @@
+{
+  "name": "ai-memory",
+  "displayName": "AI\u30e1\u30e2\u30ea\u30fc\u3044\u3089\u3093\u304b\u3048\uff5e",
+  "description": "Remember and recall shared hackathon knowledge via Kibana Agent Builder MCP. Use when the user asks to memorize, remember, or search stored notes.",
+  "version": "{{ plugin_version }}",
+  "author": {
+    "name": "sakurai-youhei"
+  },
+  "homepage": "https://github.com/sakurai-youhei/hackathon-ai-memory",
+  "repository": "https://github.com/sakurai-youhei/hackathon-ai-memory",
+  "keywords": [
+    "memory",
+    "kibana",
+    "mcp",
+    "elasticsearch",
+    "hackathon"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "userConfig": {
+    "AI_MEMORY_API_KEY": {
+      "type": "string",
+      "title": "AI Memory API key",
+      "description": "Encoded Elasticsearch/Kibana API key used as Authorization: ApiKey <value>",
+      "sensitive": true,
+      "required": true
+    }
+  }
+}

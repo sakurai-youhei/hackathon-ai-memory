@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import re
 import sys
 import zipfile
 from pathlib import Path
@@ -12,8 +13,12 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 SITE_DIR = Path(__file__).resolve().parent / "plugin-site"
 PLUGIN_DIR = SITE_DIR / "plugins" / "ai-memory"
+VERSION_FILE = PLUGIN_DIR / "VERSION"
+SEMVER_PATTERN = re.compile(r"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)$")
 PLUGIN_TEMPLATES = (
     (".mcp.json.j2", ".mcp.json"),
+    (".claude-plugin/plugin.json.j2", ".claude-plugin/plugin.json"),
+    (".cursor-plugin/plugin.json.j2", ".cursor-plugin/plugin.json"),
     ("gemini-extension.json.j2", "gemini-extension.json"),
 )
 SITE_TEMPLATES = (
@@ -34,6 +39,19 @@ def _require_env(name: str) -> str:
         )
         raise SystemExit(1)
     return value
+
+
+def _read_plugin_version() -> str:
+    try:
+        version = VERSION_FILE.read_text(encoding="utf-8").strip()
+    except OSError as error:
+        print(f"Unable to read plugin version: {error}", file=sys.stderr)
+        raise SystemExit(1) from error
+
+    if SEMVER_PATTERN.fullmatch(version) is None:
+        print(f"Invalid plugin version in {VERSION_FILE}: {version!r}", file=sys.stderr)
+        raise SystemExit(1)
+    return version
 
 
 def _render(env: Environment, template_name: str, output_path: Path, context: dict) -> None:
@@ -65,11 +83,13 @@ def _build_zip(plugin_dir: Path, zip_path: Path) -> None:
 def main() -> int:
     kb_endpoint = _require_env("KB_ENDPOINT")
     plugin_public_url = _require_env("PLUGIN_PUBLIC_URL").rstrip("/")
+    plugin_version = _read_plugin_version()
 
     kibana_mcp_url = f"{kb_endpoint.rstrip('/')}/api/agent_builder/mcp"
     context = {
         "kibana_mcp_url": kibana_mcp_url,
         "plugin_public_url": plugin_public_url,
+        "plugin_version": plugin_version,
     }
 
     plugin_env = Environment(
@@ -94,6 +114,7 @@ def main() -> int:
 
     print(f"Kibana MCP URL: {kibana_mcp_url}")
     print(f"Plugin public URL: {plugin_public_url}")
+    print(f"Plugin version: {plugin_version}")
     return 0
 
 

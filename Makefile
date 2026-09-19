@@ -7,7 +7,7 @@ PLUGIN_PUBLIC_URL := https://storage.googleapis.com/$(PLUGIN_BUCKET)
 VENV_PYTHON := .venv/bin/python
 VENV_PYTHON_VERSION ?= 3.14
 
-.PHONY: create-venv upload-plugin render-plugin
+.PHONY: create-venv upload-plugin render-plugin bump-plugin-version
 
 create-venv: $(VENV_PYTHON)
 
@@ -16,6 +16,10 @@ $(VENV_PYTHON):
 
 upload-plugin: render-plugin
 	@./google-cloud/upload-plugin.sh
+
+bump-plugin-version: $(VENV_PYTHON)
+	@$(VENV_PYTHON) google-cloud/bump-plugin-version.py
+	@$(MAKE) upload-plugin
 
 render-plugin: $(VENV_PYTHON)
 	@test -n "$(KB_ENDPOINT)" || (echo "KB_ENDPOINT is required in .env" >&2; exit 1)

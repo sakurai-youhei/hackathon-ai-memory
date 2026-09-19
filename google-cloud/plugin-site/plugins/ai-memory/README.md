@@ -15,8 +15,9 @@ https://storage.googleapis.com/hackathon-ai-memory-plugin
 
 - `.mcp.json.j2` — Jinja template for Cursor / Claude (URL from `KB_ENDPOINT`)
 - `gemini-extension.json.j2` — Jinja template for Gemini CLI
-- `.cursor-plugin/plugin.json` — Cursor manifest (`variables.AI_MEMORY_API_KEY`)
-- `.claude-plugin/plugin.json` — Claude Code manifest (`userConfig.AI_MEMORY_API_KEY`)
+- `.cursor-plugin/plugin.json.j2` — Cursor manifest template (`variables.AI_MEMORY_API_KEY`)
+- `.claude-plugin/plugin.json.j2` — Claude Code manifest template (`userConfig.AI_MEMORY_API_KEY`)
+- `VERSION` — shared semantic version for all plugin manifests
 - `GEMINI.md` — Gemini CLI extension context
 - `skills/ai-memory/` — guidance for remembering and recalling via MCP
 
@@ -30,6 +31,12 @@ make render-plugin
 
 This writes `.mcp.json`, `gemini-extension.json`, marketplace manifests,
 `index.html`, and `plugins/ai-memory.zip` using `PLUGIN_PUBLIC_URL`.
+
+To increment the patch version, render the artifacts, and upload them:
+
+```bash
+make bump-plugin-version
+```
 
 ## Caution
 
