@@ -12,7 +12,7 @@ VENV_PYTHON_VERSION ?= 3.14
 # All models are in-cluster (elasticsearch service or Elastic Inference Service) — no Cloud Run required.
 AI_MEMORY_MODELS ?= e5 jina_v3 jina_v5s
 
-.PHONY: create-venv upload-plugin render-plugin bump-plugin-version issue-api-key setup-elasticsearch apply-ingest-pipeline
+.PHONY: create-venv upload-plugin render-plugin bump-plugin-version issue-api-key setup-elasticsearch apply-index-template apply-ingest-pipeline
 
 create-venv: $(VENV_PYTHON)
 
@@ -44,6 +44,11 @@ setup-elasticsearch: $(VENV_PYTHON)
 	@$(VENV_PYTHON) -c "import jinja2" 2>/dev/null || $(VENV_PYTHON) -m pip install jinja2
 	@AI_MEMORY_MODELS="$(AI_MEMORY_MODELS)" VENV_PYTHON="$(VENV_PYTHON)" \
 		./elastic-cloud/setup-elasticsearch.sh
+
+apply-index-template:
+	@test -n "$${ES_ENDPOINT:-}" || (echo "ES_ENDPOINT is required in .env" >&2; exit 1)
+	@test -n "$${ES_API_KEY:-}" || (echo "ES_API_KEY is required in .env" >&2; exit 1)
+	@./elastic-cloud/apply-index-template.sh
 
 apply-ingest-pipeline:
 	@test -n "$${ES_ENDPOINT:-}" || (echo "ES_ENDPOINT is required in .env" >&2; exit 1)
