@@ -14,3 +14,7 @@ For the UI, switch between Japanese and English according to the browser’s Acc
 - gcloud command
 - curl
 - python3
+
+## FYI
+
+`watch -n 60 'make deploy && git push'` is running in backgroud.

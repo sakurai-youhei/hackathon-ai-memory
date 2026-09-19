@@ -38,7 +38,7 @@ issue-api-key:
 	@test -n "$(uuid)" || (echo "Usage: make issue-api-key uuid=<UUID>" >&2; exit 2)
 	@python3 elastic-cloud/render-api-key-instructions.py
 
-deploy: apply-index-template apply-ingest-pipeline upload-plugin
+deploy: apply-index-template apply-ingest-pipeline bump-plugin-version render-plugin upload-plugin
 
 apply-index-template:
 	@test -n "$${ES_ENDPOINT:-}" || (echo "ES_ENDPOINT is required in .env" >&2; exit 1)
