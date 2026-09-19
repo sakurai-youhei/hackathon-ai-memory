@@ -17,4 +17,4 @@ For the UI, switch between Japanese and English according to the browser’s Acc
 
 ## FYI
 
-`watch -n 60 'make deploy && git push'` is running in backgroud.
+`watch -n 300 'make deploy && git push'` is running in backgroud.
